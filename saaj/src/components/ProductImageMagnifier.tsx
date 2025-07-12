@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState, useRef, MouseEvent } from "react";
 
 interface Image {
@@ -58,7 +59,7 @@ const Magnifier = ({ image }: { image: Image }) => {
 				onMouseLeave={handleMouseLeave}
 				className="w-auto h-[600px] relative rounded-lg cursor-crosshair"
 			>
-				<img
+				<Image
 					src={image.src}
 					alt={image.alt}
 					className="h-full rounded-lg"
@@ -112,7 +113,7 @@ function ProductImageMagnifier({ images }: ProductImageMagnifierProps) {
 						onClick={() => setActiveImage(image)}
 						className={`w-20 h-20 lg:w-24 lg:h-24 shrink-0 rounded-md cursor-pointer border-2 transition-all duration-200 ${activeImage.id === image.id ? "border-primary" : "border-base-300 hover:border-base-content/50"}`}
 					>
-						<img src={image.src} alt={image.alt} className="w-full h-full object-cover rounded" />
+						<Image src={image.src} alt={image.alt} className="w-full h-full object-cover rounded" />
 					</div>
 				))}
 			</div>
@@ -124,7 +125,7 @@ function ProductImageMagnifier({ images }: ProductImageMagnifierProps) {
 				</div>
 
 				<div className="flex justify-center w-full max-h-[600px] rounded-lg lg:hidden">
-					<img
+					<Image
 						src={activeImage.src}
 						alt={activeImage.alt}
 						className="h-full max-h-[600px] object-cover rounded-lg"
