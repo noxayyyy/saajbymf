@@ -99,8 +99,8 @@ const Magnifier = ({ image }: { image: Image }) => {
 };
 
 function ProductImageMagnifier({ images }: ProductImageMagnifierProps) {
-	if (!images || images.length === 0) return null;
 	const [activeImage, setActiveImage] = useState<Image>(images[0]);
+	if (!images || images.length === 0) return null;
 
 	return (
 		<div className="flex flex-col lg:flex-row gap-4 w-full">
