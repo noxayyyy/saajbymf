@@ -6,16 +6,19 @@ import { countryToCurrency } from "../../../middleware";
 import { headers } from "next/headers";
 
 interface SearchPageProps {
-	searchParams: { query: string };
+	searchParams: Promise<{ query: string }>;
 }
 
-export function generateMetadata({ searchParams: { query } }: SearchPageProps): Metadata {
+export async function generateMetadata({ searchParams }: SearchPageProps): Promise<Metadata> {
+	const query = (await searchParams).query;
+
 	return {
 		title: `Search: ${query} - Saaj by MF`,
 	};
 }
 
-export default async function SearchPage({ searchParams: { query } }: SearchPageProps) {
+export default async function SearchPage({ searchParams }: SearchPageProps) {
+	const query = (await searchParams).query;
 	const user_country = (await headers()).get("x-user-country") || DEFAULT_COUNTRY;
 	const currency = countryToCurrency[user_country];
 

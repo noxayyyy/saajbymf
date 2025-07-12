@@ -21,9 +21,6 @@ export async function addItem(product_id: string, user_country: string) {
       },
     });
     revalidatePath("/products/[id]");
-    const usd_prices = await prisma.price.findMany({
-      where: { currency: "USD" },
-    });
 
     return;
   }

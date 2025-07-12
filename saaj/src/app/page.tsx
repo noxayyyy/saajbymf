@@ -8,10 +8,11 @@ import Link from "next/link";
 import { countryToCurrency } from "../../middleware";
 
 interface HomeProps {
-	searchParams: { page: string };
+	searchParams: Promise<{ page: string }>;
 }
 
-export default async function Home({ searchParams: { page = "1" } }: HomeProps) {
+export default async function Home({ searchParams }: HomeProps) {
+	const page = (await searchParams).page || "1";
 	const user_country = (await headers()).get("x-user-country") || DEFAULT_COUNTRY;
 	const currency = countryToCurrency[user_country];
 
