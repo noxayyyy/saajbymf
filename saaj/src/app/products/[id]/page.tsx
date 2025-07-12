@@ -10,9 +10,9 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 
 interface ProductPageProps {
-	params: {
+	params: Promise<{
 		id: string,
-	}
+	}>
 };
 
 const getProduct = cache(async (id: string) => {
@@ -26,7 +26,9 @@ const getProduct = cache(async (id: string) => {
 	return product;
 });
 
-export async function generateMetadata({ params: { id } }: ProductPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+	const id = (await params).id;
+
 	const product = await getProduct(id);
 	return {
 		title: product.name + " - Saaj by MF",
@@ -43,7 +45,8 @@ interface Image {
 	alt: string;
 }
 
-export default async function ProductPage({ params: { id } }: ProductPageProps) {
+export default async function ProductPage({ params }: ProductPageProps) {
+	const id = (await params).id;
 	const user_country = (await headers()).get("x-user-country") || DEFAULT_COUNTRY;
 	const product = await getProduct(id);
 	const product_price = await getProductCostWithCurrency(product.prices, user_country);
