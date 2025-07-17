@@ -49,7 +49,7 @@ export default async function Home({ searchParams }: HomeProps) {
 		},
 	});
 
-	let products = await prisma.product.findMany({
+	const products = await prisma.product.findMany({
 		where: {
 			id: {
 				in: product_ids.map(p => p.id),
