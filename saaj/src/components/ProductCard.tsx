@@ -1,5 +1,3 @@
-// src/components/ProductCard.tsx
-
 import { Price, Product } from "@/generated/prisma";
 import Link from "next/link";
 import CostTag from "./CostTag";

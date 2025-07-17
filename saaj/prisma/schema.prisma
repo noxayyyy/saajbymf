@@ -27,6 +27,7 @@ model Product {
     created_at DateTime   @default(now())
     updated_at DateTime   @updatedAt
     cart_item  CartItem[]
+    def_price  Float
     prices     Price[]
 
     @@map("products")
