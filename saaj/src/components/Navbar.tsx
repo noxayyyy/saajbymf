@@ -1,22 +1,11 @@
 import { getCart } from "@/lib/cart";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import CartButton from "./CartButton";
 import UserMenuButton from "./UserMenuButton";
 import { getServerSession } from "next-auth";
 import { auth_opts } from "@/app/api/auth/[...nextauth]/route";
 import LogoSvg from "./LogoSVG";
 import Search from "./Search";
-
-async function searchProducts(form_data: FormData) {
-	"use server";
-
-	const search_query = form_data.get("search_query")?.toString();
-
-	if (search_query) {
-		redirect(`/search?query=${search_query}`);
-	}
-}
 
 export default async function Navbar() {
 	const session = await getServerSession(auth_opts);
