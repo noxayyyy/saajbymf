@@ -30,15 +30,15 @@ async function addProduct(form_data: FormData) {
 	const image_urls = form_data.getAll("image_url").map(url => url.toString());
 	let cost = Number(form_data.get("cost"));
 
-	let size_s = Boolean(form_data.get("size_s"));
-	let size_m = Boolean(form_data.get("size_m"));
-	let size_l = Boolean(form_data.get("size_l"));
-	let size_xl = Boolean(form_data.get("size_xl"));
+	const size_s = Boolean(form_data.get("size_s"));
+	const size_m = Boolean(form_data.get("size_m"));
+	const size_l = Boolean(form_data.get("size_l"));
+	const size_xl = Boolean(form_data.get("size_xl"));
 
-	let stock_s = Number(form_data.get("stock_s"));
-	let stock_m = Number(form_data.get("stock_m"));
-	let stock_l = Number(form_data.get("stock_l"));
-	let stock_xl = Number(form_data.get("stock_xl"));
+	const stock_s = Number(form_data.get("stock_s"));
+	const stock_m = Number(form_data.get("stock_m"));
+	const stock_l = Number(form_data.get("stock_l"));
+	const stock_xl = Number(form_data.get("stock_xl"));
 
 	const sizes_bools = [size_s, size_m, size_l, size_xl];
 	const sizes = [];
