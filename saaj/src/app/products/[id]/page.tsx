@@ -1,11 +1,10 @@
 import AddToCartButton from "@/components/AddToCartButton";
 import CostTag from "@/components/CostTag";
 import ProductImageMagnifier from "@/components/ProductImageMagnifier";
-import { getProductCostWithCurrency } from "@/lib/cost";
-import { DEFAULT_COUNTRY } from "../../../../middleware";
+import { getConversionRate } from "@/lib/cost";
+import { getCurrency } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
 import { Metadata } from "next";
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 
@@ -18,9 +17,6 @@ interface ProductPageProps {
 const getProduct = cache(async (id: string) => {
 	const product = await prisma.product.findUnique({
 		where: { id },
-		include: {
-			prices: true,
-		}
 	});
 	if (!product) notFound();
 	return product;
@@ -47,9 +43,10 @@ interface Image {
 
 export default async function ProductPage({ params }: ProductPageProps) {
 	const id = (await params).id;
-	const user_country = (await headers()).get("x-user-country") || DEFAULT_COUNTRY;
 	const product = await getProduct(id);
-	const product_price = await getProductCostWithCurrency(product.prices, user_country);
+
+	const currency = await getCurrency();
+	const conversion_rate = await getConversionRate(currency);
 
 	const images: Image[] = product.image_urls.map((url, index) => ({
 		id: index,
@@ -79,11 +76,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 					</div>
 
 					<div>
-						{product_price ? (
-							<CostTag price={product_price} className="text-3xl p-4" />
-						) : (
-							<p className="text-xl text-error">Price not available</p>
-						)}
+						<CostTag price={product.price} currency={currency} conversion_rate={conversion_rate} className="text-3xl p-4" />
 					</div>
 
 					{/* Divider */}
@@ -100,7 +93,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 					{/* Add to Cart Section */}
 					{/* Constrain the button width for better aesthetics */}
 					<div className="w-full max-w-sm mx-auto pt-4">
-						<AddToCartButton user_country={user_country} product_id={product.id} />
+						<AddToCartButton product_id={product.id} />
 					</div>
 				</div>
 			</div>

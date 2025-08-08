@@ -18,6 +18,18 @@ model Currency {
     @@map("currencies")
 }
 
+enum Size {
+    SMALL
+    MEDIUM
+    LARGE
+    EXTRA_LARGE
+}
+
+type Stock {
+    size Size
+    qty  Int
+}
+
 model Product {
     id         String     @id @default(auto()) @map("_id") @db.ObjectId
     desc       String
@@ -27,21 +39,11 @@ model Product {
     created_at DateTime   @default(now())
     updated_at DateTime   @updatedAt
     cart_item  CartItem[]
-    def_price  Float
-    prices     Price[]
+    price      Float
+    sizes      Size[]
+    stocks     Stock[]
 
     @@map("products")
-}
-
-model Price {
-    id         String  @id @default(auto()) @map("_id") @db.ObjectId
-    currency   String
-    amount     Float
-    product_id String  @db.ObjectId
-    product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
-
-    @@unique([product_id, currency])
-    @@map("prices")
 }
 
 model Cart {

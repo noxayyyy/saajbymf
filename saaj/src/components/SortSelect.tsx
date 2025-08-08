@@ -22,8 +22,8 @@ export default function SortSelect({ sort, current_page, className }: SortSelect
 			<option value="id-asc">Date: Oldest</option>
 			<option value="name-asc">Name: A-Z</option>
 			<option value="name-desc">Name: Z-A</option>
-			<option value="def_price-asc">Price: Low to High</option>
-			<option value="def_price-desc">Price: High to Low</option>
+			<option value="price-asc">Price: Low to High</option>
+			<option value="price-desc">Price: High to Low</option>
 		</select>
 	)
 }

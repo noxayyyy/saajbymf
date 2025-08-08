@@ -8,3 +8,11 @@ export const getTotalProductsCount = unstable_cache(
     revalidate: 600,
   },
 );
+
+export const getQueriedProducts = async (query: string, take: number) => {
+  return await prisma.product.findMany({
+    where: { name: { contains: query, mode: "insensitive" } },
+    orderBy: { id: "desc" },
+    take: take,
+  });
+};

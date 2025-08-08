@@ -1,22 +1,20 @@
-import { Price } from "@/generated/prisma";
-import { countryToCurrency } from "../../middleware";
+import { prisma } from "./prisma";
 
-export const formatPrice = (price: Price) => {
+export const formatPrice = (price: number, currency: string) => {
   return new Intl.NumberFormat(undefined, {
     style: "currency",
-    currency: price.currency,
-  }).format(price.amount);
+    currency: currency,
+  }).format(price);
 };
 
-export const getProductCostWithCurrency = async (
-  costs: Price[],
-  user_country: string,
-): Promise<Price> => {
-  const currency = countryToCurrency[user_country];
-
-  const regional_price = costs.find((cost) => {
-    return cost.currency === currency;
-  });
-
-  return regional_price ?? { id: "", product_id: "", amount: -1, currency: "" };
+export const getConversionRate = async (currency: string) => {
+  return (
+    (
+      await prisma.currency.findFirst({
+        where: {
+          name: currency,
+        },
+      })
+    )?.rate || 1
+  );
 };

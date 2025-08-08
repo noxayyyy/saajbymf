@@ -1,51 +1,40 @@
+import Link from "next/link";
+
 export default function Footer() {
 	return (
 		<footer className="footer footer-horizontal footer-center bg-base-200 text-base-content rounded p-10">
 			<nav className="grid grid-flow-col gap-4">
-				<a className="link link-hover">About us</a>
-				<a className="link link-hover">Contact</a>
-				<a className="link link-hover">Jobs</a>
-				<a className="link link-hover">Press kit</a>
+				{
+					// <Link className="link link-hover">About us</Link>
+					// <Link className="link link-hover">Contact</Link>
+					// <Link className="link link-hover">Jobs</Link>
+					// <Link className="link link-hover">Press kit</Link>
+				}
 			</nav>
 			<nav>
 				<div className="grid grid-flow-col gap-4">
-					<a>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							className="fill-current">
-							<path
-								d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
-						</svg>
-					</a>
-					<a>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							className="fill-current">
-							<path
-								d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
-						</svg>
-					</a>
-					<a>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							className="fill-current">
-							<path
-								d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
-						</svg>
-					</a>
+					<Link
+						className="link"
+						href="https://facebook.com/saajbymf"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">    <path d="M12,2C6.477,2,2,6.477,2,12c0,5.013,3.693,9.153,8.505,9.876V14.65H8.031v-2.629h2.474v-1.749 c0-2.896,1.411-4.167,3.818-4.167c1.153,0,1.762,0.085,2.051,0.124v2.294h-1.642c-1.022,0-1.379,0.969-1.379,2.061v1.437h2.995 l-0.406,2.629h-2.588v7.247C18.235,21.236,22,17.062,22,12C22,6.477,17.523,2,12,2z" /></svg>
+					</Link>
+					<Link
+						className="link"
+						href="https://instagram.com/saajbymf"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">    <path d="M 8 3 C 5.239 3 3 5.239 3 8 L 3 16 C 3 18.761 5.239 21 8 21 L 16 21 C 18.761 21 21 18.761 21 16 L 21 8 C 21 5.239 18.761 3 16 3 L 8 3 z M 18 5 C 18.552 5 19 5.448 19 6 C 19 6.552 18.552 7 18 7 C 17.448 7 17 6.552 17 6 C 17 5.448 17.448 5 18 5 z M 12 7 C 14.761 7 17 9.239 17 12 C 17 14.761 14.761 17 12 17 C 9.239 17 7 14.761 7 12 C 7 9.239 9.239 7 12 7 z M 12 9 A 3 3 0 0 0 9 12 A 3 3 0 0 0 12 15 A 3 3 0 0 0 15 12 A 3 3 0 0 0 12 9 z" /></svg>
+					</Link>
+					<Link
+						className="link"
+						href="https://tiktok.com/@saajbymf"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32"><path d="M 6 3 C 4.3550302 3 3 4.3550302 3 6 L 3 18 C 3 19.64497 4.3550302 21 6 21 L 18 21 C 19.64497 21 21 19.64497 21 18 L 21 6 C 21 4.3550302 19.64497 3 18 3 L 6 3 z M 12 7 L 14 7 C 14 8.005 15.471 9 16 9 L 16 11 C 15.395 11 14.668 10.734156 14 10.285156 L 14 14 C 14 15.654 12.654 17 11 17 C 9.346 17 8 15.654 8 14 C 8 12.346 9.346 11 11 11 L 11 13 C 10.448 13 10 13.449 10 14 C 10 14.551 10.448 15 11 15 C 11.552 15 12 14.551 12 14 L 12 7 z" /></svg>
+					</Link>
 				</div>
 			</nav>
 			<aside>
-				<p>Copyright © {new Date().getFullYear()} - All right reserved by ACME Industries Ltd</p>
+				<p>Copyright © {new Date().getFullYear()} - All rights reserved by MF Clothing</p>
 			</aside>
 		</footer>
 	);

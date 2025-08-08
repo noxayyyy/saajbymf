@@ -17,29 +17,95 @@ export default function AddProductForm({ action }: AddProductFormProps) {
 	return (
 		<form action={action}>
 			<input
-				required
 				name="name"
 				placeholder="Name"
 				className="input input-bordered mb-3 w-full"
 			/>
 			<input
-				required
 				name="sku"
 				placeholder="SKU"
 				className="input input-bordered mb-3 w-full"
 			/>
 			<textarea
-				required
 				name="desc"
 				className="textarea textarea-bordered mb-3 w-full"
 				placeholder="Description"
 			/>
 
+			<fieldset className="fieldset font-bold flex w-full mb-3">
+				<legend className="fieldset-legend">Sizes</legend>
+				<label className="label px-2">
+					<input type="checkbox" name="size_s" className="checkbox checked:checkbox-primary" />
+					Small
+				</label>
+				<label className="label px-2">
+					<input type="checkbox" name="size_m" className="checkbox checked:checkbox-primary" />
+					Medium
+				</label>
+				<label className="label px-2">
+					<input type="checkbox" name="size_l" className="checkbox checked:checkbox-primary" />
+					Large
+				</label>
+				<label className="label px-2">
+					<input type="checkbox" name="size_xl" className="checkbox checked:checkbox-primary" />
+					X Large
+				</label>
+			</fieldset>
+
+			<div className="mb-3 w-full">
+				<legend className="fieldset-legend">Stocks</legend>
+				<div className="flex flex-col lg:flex-row justify-center w-full">
+					<div className="join p-2 w-full">
+						<div className="join-item min-w-23 btn btn-secondary btn-active">Small</div>
+						<input
+							name="stock_s"
+							type="number"
+							min="0"
+							defaultValue="0"
+							placeholder="Quantity"
+							className="input input-bordered w-full join-item"
+						/>
+					</div>
+					<div className="join p-2 w-full">
+						<div className="join-item min-w-23 btn btn-secondary btn-active">Medium</div>
+						<input
+							name="stock_m"
+							type="number"
+							min="0"
+							defaultValue="0"
+							placeholder="Quantity"
+							className="input input-bordered w-full join-item"
+						/>
+					</div>
+					<div className="join p-2 w-full">
+						<div className="join-item min-w-23 btn btn-secondary btn-active">Large</div>
+						<input
+							name="stock_l"
+							type="number"
+							min="0"
+							defaultValue="0"
+							placeholder="Quantity"
+							className="input input-bordered w-full join-item"
+						/>
+					</div>
+					<div className="join p-2 w-full">
+						<div className="join-item min-w-23 btn btn-secondary btn-active">X Large</div>
+						<input
+							name="stock_xl"
+							type="number"
+							min="0"
+							defaultValue="0"
+							placeholder="Quantity"
+							className="input input-bordered w-full join-item"
+						/>
+					</div>
+				</div>
+			</div>
+
 			<div className="mb-3">
 				{image_fields.map((key, index) => (
 					<input
 						key={key}
-						required
 						name="image_url"
 						type="url"
 						placeholder={`Image URL ${index + 1}`}
@@ -52,9 +118,8 @@ export default function AddProductForm({ action }: AddProductFormProps) {
 			</div>
 
 			<label className="input input-bordered mb-3 w-full">
-				<div>$</div>
+				<div>Rs.</div>
 				<input
-					required
 					name="cost"
 					placeholder="Cost"
 					type="number"

@@ -4,11 +4,10 @@ import { addItem } from "@/app/products/[id]/actions";
 import { useState, useTransition } from "react";
 
 interface AddToCartButtonProps {
-	user_country: string,
 	product_id: string,
 }
 
-export default function AddToCartButton({ user_country, product_id }: AddToCartButtonProps) {
+export default function AddToCartButton({ product_id }: AddToCartButtonProps) {
 	const [pending, startTransition] = useTransition();
 	const [success, setSuccess] = useState(false);
 	return (
@@ -18,7 +17,7 @@ export default function AddToCartButton({ user_country, product_id }: AddToCartB
 				onClick={() => {
 					setSuccess(false);
 					startTransition(async () => {
-						await addItem(product_id, user_country);
+						await addItem(product_id);
 						setSuccess(true);
 					});
 				}}

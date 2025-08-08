@@ -1,7 +1,6 @@
 "use client";
 
 import { setItemQty } from "@/app/products/[id]/actions";
-import { Price } from "@/generated/prisma";
 import { CartItemWithProduct } from "@/lib/cart";
 import { formatPrice } from "@/lib/cost";
 import Image from "next/image";
@@ -10,14 +9,15 @@ import { JSX, useTransition } from "react";
 
 interface CartItemCardProps {
 	item: CartItemWithProduct,
-	product_price?: Price,
+	currency: string,
+	conversion_rate: number,
 }
 
-export default function CartItemCard({ item: { product, quantity }, product_price }: CartItemCardProps) {
+export default function CartItemCard({ item: { product, quantity }, currency, conversion_rate }: CartItemCardProps) {
 	const [pending, startTransition] = useTransition();
 
 	const qty_opts: JSX.Element[] = [];
-	const formatted_price = product_price ? formatPrice(product_price) : "Unavailable";
+	const formatted_price = formatPrice(product.price * conversion_rate, currency);
 
 	for (let i = 1; i < 100; i++) {
 		qty_opts.push(
@@ -42,7 +42,7 @@ export default function CartItemCard({ item: { product, quantity }, product_pric
 						{product.name}
 					</Link>
 					<div>Cost: {formatted_price}</div>
-					{product_price && <div className="flex gap-2">
+					<div className="flex gap-2">
 						<div className="my-1 flex items-center gap-2">
 							Quantity:
 							<select
@@ -51,7 +51,7 @@ export default function CartItemCard({ item: { product, quantity }, product_pric
 								onChange={menu => {
 									const new_qty = parseInt(menu.currentTarget.value);
 									startTransition(async () => {
-										await setItemQty(product.id, new_qty, product_price?.currency);
+										await setItemQty(product.id, new_qty);
 									});
 								}}
 							>
@@ -60,15 +60,9 @@ export default function CartItemCard({ item: { product, quantity }, product_pric
 							</select>
 						</div>
 						{pending && <span className="loading loading-spinner loading-sm" />}
-					</div>}
+					</div>
 					<div className="flex items-center gap-2">
-						Total: {
-							formatPrice({
-								id: "",
-								product_id: "",
-								amount: product_price ? product_price.amount * quantity : -1,
-								currency: product_price ? product_price.currency : "Unavailable",
-							})}
+						Total: {formatPrice(product.price * quantity * conversion_rate, currency)}
 					</div>
 				</div>
 			</div>

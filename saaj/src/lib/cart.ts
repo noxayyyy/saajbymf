@@ -3,14 +3,13 @@ import { prisma } from "./prisma";
 import { CartItem, Prisma } from "../generated/prisma";
 import { getServerSession } from "next-auth";
 import { auth_opts } from "@/app/api/auth/[...nextauth]/route";
-import { getProductCostWithCurrency } from "./cost";
 
 export type CartWithProducts = Prisma.CartGetPayload<{
-  include: { items: { include: { product: { include: { prices: true } } } } };
+  include: { items: { include: { product: true } } };
 }>;
 
 export type CartItemWithProduct = Prisma.CartItemGetPayload<{
-  include: { product: { include: { prices: true } } };
+  include: { product: true };
 }>;
 
 export type ShoppingCart = CartWithProducts & {
@@ -40,9 +39,7 @@ export async function createCart(): Promise<ShoppingCart> {
   };
 }
 
-export async function getCart(
-  user_country: string,
-): Promise<ShoppingCart | null> {
+export async function getCart(): Promise<ShoppingCart | null> {
   const session = await getServerSession(auth_opts);
 
   let cart: CartWithProducts | null = null;
@@ -51,7 +48,7 @@ export async function getCart(
     cart = await prisma.cart.findFirst({
       where: { userId: session.user.id },
       include: {
-        items: { include: { product: { include: { prices: true } } } },
+        items: { include: { product: true } },
       },
     });
   } else {
@@ -60,7 +57,7 @@ export async function getCart(
       ? await prisma.cart.findUnique({
           where: { id: local_id },
           include: {
-            items: { include: { product: { include: { prices: true } } } },
+            items: { include: { product: true } },
           },
         })
       : null;
@@ -69,10 +66,7 @@ export async function getCart(
   let subtotal = 0;
   if (cart) {
     for (const item of cart.items) {
-      subtotal +=
-        item.quantity *
-        (await getProductCostWithCurrency(item.product.prices, user_country))
-          .amount;
+      subtotal += item.quantity * item.product.price;
     }
   }
 

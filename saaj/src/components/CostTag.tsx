@@ -1,13 +1,14 @@
-import { Price } from "@/generated/prisma";
 import { formatPrice } from "@/lib/cost";
 
 interface CostTagProps {
-	price: Price
+	price: number,
+	currency: string,
+	conversion_rate: number,
 	className?: string,
 }
 
-export default function CostTag({ price, className }: CostTagProps) {
-	const formatted_cost = formatPrice(price);
+export default function CostTag({ price, currency, conversion_rate, className }: CostTagProps) {
+	const formatted_cost = formatPrice(price * conversion_rate, currency);
 	return (
 		<span className={`badge badge-secondary ${className}`}>{formatted_cost}</span>
 	);

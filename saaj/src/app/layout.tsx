@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata } from "next"; import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SessionProvider from "../components/SessionProvider";
+import CurrencySelector from "@/components/CurrencySelector";
+import { getCurrency } from "@/lib/currency";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -20,11 +21,13 @@ export const metadata: Metadata = {
 	description: "placeholder",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const currency = await getCurrency();
+
 	return (
 		<html lang="en" data-theme="saaj">
 			<body
@@ -36,6 +39,7 @@ export default function RootLayout({
 						{children}
 					</main>
 					<Footer />
+					<CurrencySelector curr_currency={currency} />
 				</SessionProvider>
 			</body>
 		</html>

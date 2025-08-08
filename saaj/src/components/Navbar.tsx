@@ -6,8 +6,7 @@ import UserMenuButton from "./UserMenuButton";
 import { getServerSession } from "next-auth";
 import { auth_opts } from "@/app/api/auth/[...nextauth]/route";
 import LogoSvg from "./LogoSVG";
-import { headers } from "next/headers";
-import { DEFAULT_COUNTRY } from "../../middleware";
+import Search from "./Search";
 
 async function searchProducts(form_data: FormData) {
 	"use server";
@@ -20,10 +19,8 @@ async function searchProducts(form_data: FormData) {
 }
 
 export default async function Navbar() {
-	const user_country = (await headers()).get("x-user-country") || DEFAULT_COUNTRY;
-
 	const session = await getServerSession(auth_opts);
-	const cart = await getCart(user_country);
+	const cart = await getCart();
 
 	return (
 		<div className="bg-base-200">
@@ -31,20 +28,12 @@ export default async function Navbar() {
 				<div className="navbar-start">
 				</div>
 				<div className="navbar-center">
-					<Link href="/" className="btn h-24 btn-ghost gap-2">
+					<Link href="/" className="h-24 gap-2">
 						<LogoSvg className="h-full" />
 					</Link>
 				</div>
 				<div className="navbar-end gap-2 join">
-					<form action={searchProducts}>
-						<div className="form-control">
-							<input
-								name="search_query"
-								placeholder="Search"
-								className="input w-full min-w-[100px]"
-							/>
-						</div>
-					</form>
+					<Search />
 					<CartButton cart={cart} />
 					<UserMenuButton session={session} />
 				</div>

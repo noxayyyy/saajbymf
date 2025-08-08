@@ -4,8 +4,8 @@ import { createCart, getCart } from "@/lib/cart";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-export async function addItem(product_id: string, user_country: string) {
-  const cart = (await getCart(user_country)) ?? (await createCart());
+export async function addItem(product_id: string) {
+  const cart = (await getCart()) ?? (await createCart());
   const in_cart = cart.items.find((item) => item.product_id === product_id);
 
   if (in_cart) {
@@ -39,12 +39,8 @@ export async function addItem(product_id: string, user_country: string) {
   revalidatePath("/products/[id]");
 }
 
-export async function setItemQty(
-  product_id: string,
-  qty: number,
-  user_country: string,
-) {
-  const cart = (await getCart(user_country)) ?? (await createCart());
+export async function setItemQty(product_id: string, qty: number) {
+  const cart = (await getCart()) ?? (await createCart());
   const in_cart = cart.items.find((item) => item.product_id === product_id);
 
   if (qty === 0) {

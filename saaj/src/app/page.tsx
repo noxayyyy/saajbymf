@@ -1,13 +1,12 @@
 import PaginationBar from "@/components/PaginationBar";
 import ProductCard from "@/components/ProductCard";
-import { DEFAULT_COUNTRY } from "../../middleware";
 import { prisma } from "@/lib/prisma";
-import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
-import { countryToCurrency } from "../../middleware";
 import { getTotalProductsCount } from "@/lib/data";
 import SortSelect from "@/components/SortSelect";
+import { getConversionRate } from "@/lib/cost";
+import { getCurrency } from "@/lib/currency";
 
 interface HomeProps {
 	searchParams: Promise<{ page: string, sort: string }>;
@@ -18,9 +17,6 @@ export default async function Home({ searchParams }: HomeProps) {
 	const page = awaited_params.page || "1";
 	const [sort_by, sort_ord] = awaited_params.sort?.split("-", 2) || ["id", "desc"];
 
-	const user_country = (await headers()).get("x-user-country") || DEFAULT_COUNTRY;
-	const currency = countryToCurrency[user_country];
-
 	const current_page = parseInt(page);
 	const page_size = 16;
 
@@ -28,40 +24,19 @@ export default async function Home({ searchParams }: HomeProps) {
 	const heroes = await prisma.product.findMany({
 		orderBy: { id: "desc" },
 		take: hero_items,
-		include: {
-			prices: {
-				where: {
-					currency: currency,
-				},
-			},
-		},
 	});
 
 	const total_items = await getTotalProductsCount();
 	const total_pages = Math.ceil((total_items - hero_items) / page_size);
 
-	const product_ids = await prisma.product.findMany({
+	const products = await prisma.product.findMany({
 		orderBy: { [sort_by]: sort_ord },
 		skip: (current_page - 1) * page_size,
 		take: page_size,
-		select: {
-			id: true,
-		},
 	});
 
-	const products = await prisma.product.findMany({
-		where: {
-			id: {
-				in: product_ids.map(p => p.id),
-			},
-		},
-		include: {
-			prices: {
-				where: { currency: currency },
-			},
-		},
-		orderBy: { [sort_by]: sort_ord },
-	});
+	const currency = await getCurrency();
+	const conversion_rate = await getConversionRate(currency);
 
 	return (
 		<div className="flex flex-col">
@@ -119,7 +94,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
 			<div className="my-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
 				{products.map(product => (
-					<ProductCard product={product} product_price={product.prices[0]} key={product.id} />
+					<ProductCard product={product} currency={currency} conversion_rate={conversion_rate} key={product.id} />
 				))}
 			</div>
 
