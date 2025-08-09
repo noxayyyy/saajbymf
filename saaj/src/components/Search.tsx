@@ -11,8 +11,8 @@ export default function Search() {
 
 	return (
 		<div className="dropdown dropdown-end">
-			<div tabIndex={0} role="button" className="btn">
-				<svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+			<div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+				<svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 					<g
 						strokeLinejoin="round"
 						strokeLinecap="round"

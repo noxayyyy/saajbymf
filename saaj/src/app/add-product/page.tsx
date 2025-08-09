@@ -80,7 +80,7 @@ async function addProduct(form_data: FormData) {
 				image_urls,
 				price: cost,
 				sizes: sizes as Size[],
-				stock: stocks,
+				stocks: stocks,
 			},
 		});
 		name = name.split(" ")[0];
