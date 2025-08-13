@@ -1,21 +1,26 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 interface SortSelectProps {
 	sort: string;
-	current_page: number;
 	className?: string;
 }
 
-export default function SortSelect({ sort, current_page, className }: SortSelectProps) {
+export default function SortSelect({ sort, className }: SortSelectProps) {
+	const router = useRouter();
+	const pathname = usePathname();
+	const search_params = useSearchParams();
+	const params = new URLSearchParams(search_params.toString());
+
 	return (
 		<select
-			className={`select ${className}`}
+			className={`select focus:outline-hidden ${className}`}
 			value={sort}
 			onChange={(e) => {
 				sort = e.target.value;
-				redirect(`/?page=${current_page}&sort=${sort}`);
+				params.set("sort", sort);
+				router.push(`${pathname}?${params.toString()}`);
 			}}
 		>
 			<option value="id-desc">Date: Latest</option>

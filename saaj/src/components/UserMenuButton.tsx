@@ -7,12 +7,13 @@ import { signIn, signOut } from "next-auth/react";
 
 interface UserMenuButtonProps {
 	session: Session | null,
+	className?: string,
 }
 
-export default function UserMenuButton({ session }: UserMenuButtonProps) {
+export default function UserMenuButton({ session, className }: UserMenuButtonProps) {
 	const user = session?.user;
 	return (
-		<div className="dropdown dropdown-end">
+		<div className={`dropdown dropdown-end ${className}`}>
 			<label tabIndex={0} className="btn btn-ghost btn-circle">
 				{user ? <Image
 					src={user?.image || anon_pic}

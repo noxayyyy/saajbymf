@@ -1,6 +1,7 @@
 import CartItemCard from "@/components/CartItemCard";
 import { getCart } from "@/lib/cart";
-import { formatPrice, getConversionRate } from "@/lib/cost";
+import { formatPrice } from "@/lib/cost";
+import { getConversionRate } from "@/lib/currency";
 import { getCurrency } from "@/lib/currency";
 
 export const metadata = {
@@ -22,7 +23,7 @@ export default async function CartPage() {
 			{!cart?.size && <p>Your cart is empty.</p>}
 			<div className="flex flex-col items-end sm:items-center">
 				<p className="mb-3 font-bold">
-					Total: {formatPrice(cart?.subtotal || 0, currency)}
+					Total: {formatPrice((cart?.subtotal || 0) * conversion_rate, currency)}
 				</p>
 				<button className="btn btn-primary sm:w-[150px]">Checkout</button>
 			</div>

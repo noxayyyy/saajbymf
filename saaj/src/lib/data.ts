@@ -8,6 +8,20 @@ export const getTotalProductsCount = unstable_cache(
     revalidate: 600,
   },
 );
+export const getMaxPrice = unstable_cache(
+  async () =>
+    (
+      await prisma.product.findFirst({
+        orderBy: {
+          price: "desc",
+        },
+      })
+    )?.price || 0,
+  ["max_price"],
+  {
+    revalidate: 600,
+  },
+);
 
 export const getQueriedProducts = async (query: string, take: number) => {
   return await prisma.product.findMany({

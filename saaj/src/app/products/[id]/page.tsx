@@ -1,8 +1,7 @@
 import AddToCartButton from "@/components/AddToCartButton";
 import CostTag from "@/components/CostTag";
 import ProductImageMagnifier from "@/components/ProductImageMagnifier";
-import { getConversionRate } from "@/lib/cost";
-import { getCurrency } from "@/lib/currency";
+import { getCurrency, getConversionRate } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";

@@ -29,16 +29,18 @@ export default async function RootLayout({
 	const currency = await getCurrency();
 
 	return (
-		<html lang="en" data-theme="saaj">
+		<html lang="en" data-theme="saaj" className="scroll-smooth">
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
 				<SessionProvider>
-					<Navbar />
-					<main className="p-4 max-w-7xl m-auto min-w-[300px]">
-						{children}
-					</main>
-					<Footer />
+					<div className="flex flex-col min-h-screen">
+						<Navbar />
+						<main className="flex-1 flex-grow p-4 max-w-7xl w-full m-auto min-w-[300px]">
+							{children}
+						</main>
+						<Footer />
+					</div>
 					<CurrencySelector curr_currency={currency} />
 				</SessionProvider>
 			</body>

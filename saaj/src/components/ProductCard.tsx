@@ -10,8 +10,8 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, conversion_rate, currency }: ProductCardProps) {
-	const new_limit: number = 60480000; // milliseconds in a week
-	const is_new: boolean = Date.now() - new Date(product.created_at).getTime() < new_limit;
+	{/* const new_limit: number = 60480000; / / milliseconds in a week
+		const is_new: boolean = Date.now() - new Date(product.created_at).getTime() < new_limit; */}
 
 	return (
 		<div className="card group w-full bg-base-100 overflow-hidden max-w-xs" >
@@ -27,30 +27,31 @@ export default function ProductCard({ product, conversion_rate, currency }: Prod
 						className="object-cover transition-transform duration-300 group-hover:scale-105"
 					/>
 
-					<div className="hidden lg:card-body absolute bottom-0 left-0 right-0 h-1/3
+					<div className="hidden lg:card-body absolute bottom-0 left-0 right-0 h-1/3.5
 								bg-gradient-to-t from-black/75 to-transparent
 								p-4 text-white
 								opacity-0 translate-y-full group-hover:translate-y-0 group-hover:opacity-100
 								transition-all duration-300 ease-in-out">
-						<h2 className="card-title">{product.name}</h2>
-						<p className="overflow-hidden text-ellipsis whitespace-nowrap">
+						<p className="line-clamp-4">
 							{product.desc}
 						</p>
 					</div>
 				</figure>
 
 			</Link>
-			<div className="w-full font-thin lg:hidden py-1">
-				{product.name}
+			<div className="flex w-full justify-between items-center font-thin py-1">
+				<div className="justify-start">
+					{product.name}
+				</div>
+				<CostTag price={product.price} conversion_rate={conversion_rate} currency={currency} className="justify-end" />
 			</div>
-			<div className="flex justify-between items-center w-full py-1">
+			{/* <div className="flex justify-between items-center w-full py-1">
 				{is_new ? (
 					<div className="badge badge-accent justify-start">NEW</div>
 				) : (
-					<div className="justify-start" />
+					<div className="justify-end" />
 				)}
-				<CostTag price={product.price} conversion_rate={conversion_rate} currency={currency} className="justify-end" />
-			</div>
+			</div> */}
 		</div>
 	);
 }

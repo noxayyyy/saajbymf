@@ -1,6 +1,5 @@
 import ProductCard from "@/components/ProductCard";
-import { getConversionRate } from "@/lib/cost";
-import { getCurrency } from "@/lib/currency";
+import { getCurrency, getConversionRate } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
 import { Metadata } from "next";
 

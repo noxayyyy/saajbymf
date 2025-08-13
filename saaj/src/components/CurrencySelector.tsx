@@ -30,7 +30,7 @@ export default function CurrencySelector({ curr_currency }: CurrencySelectorProp
 	};
 
 	return (
-		<div className={`flex rounded-md join w-fit ${pending ? "bg-base-300" : "bg-black"} text-white fixed bottom-5 right-5 z-50`}>
+		<div className={`flex rounded-md join w-fit ${pending ? "bg-base-300" : "bg-black"} text-white fixed bottom-5 right-5 z-40`}>
 			<Image
 				className="join-item object-contain rounded-md mr-2 ml-2 my-2"
 				src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${supported_countries[curr_currency]}.svg`}

@@ -51,7 +51,7 @@ const Magnifier = ({ image }: { image: Image }) => {
 	const overlayClipPath = `polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% ${overlayY}px, ${overlayX}px ${overlayY}px, ${overlayX}px ${overlayY + OVERLAY_SIZE}px, ${overlayX + OVERLAY_SIZE}px ${overlayY + OVERLAY_SIZE}px, ${overlayX + OVERLAY_SIZE}px ${overlayY}px, ${overlayX}px ${overlayY}px, 0 ${overlayY}px, 0 0)`;
 
 	return (
-		<div className="flex gap-8">
+		<div className="relative">
 			<div
 				ref={containerRef}
 				onMouseMove={handleMouseMove}
@@ -89,7 +89,7 @@ const Magnifier = ({ image }: { image: Image }) => {
 			</div>
 			{isVisible && (
 				<div
-					className="hidden lg:block border border-base-300"
+					className="hidden lg:block absolute left-full top-0 ml-8 border border-base-300"
 					style={{
 						...magnifierStyle,
 						width: `${MAGNIFIER_SIZE}px`,
@@ -106,7 +106,8 @@ function ProductImageMagnifier({ images }: ProductImageMagnifierProps) {
 	if (!images || images.length === 0) return null;
 
 	return (
-		<div className="flex flex-col lg:flex-row gap-4 w-full">
+
+		<div className="flex flex-col lg:flex-row gap-4 w-full relative">
 			{/* Thumbnail Column */}
 			<div className="flex flex-row lg:flex-col gap-2 order-last lg:order-first">
 				{images.map((image) => (
