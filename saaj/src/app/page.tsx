@@ -1,9 +1,5 @@
-import PaginationBar from "@/components/PaginationBar";
-import ProductCard from "@/components/ProductCard";
 import { prisma } from "@/lib/prisma";
-import Image from "next/image";
-import Link from "next/link";
-import { getTotalProductsCount, getMaxPrice } from "@/lib/data";
+import { getMaxPrice } from "@/lib/data";
 import SortSelect from "@/components/SortSelect";
 import { getCurrency, getConversionRate } from "@/lib/currency";
 import FilterDrawer from "@/components/FilterDrawer";

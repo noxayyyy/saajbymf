@@ -1,6 +1,5 @@
 "use client";
 
-import { formatPrice } from "@/lib/cost";
 import ReactSlider from "react-slider";
 
 interface PriceFilterProps {
