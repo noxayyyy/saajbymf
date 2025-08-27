@@ -53,24 +53,3 @@ export const addOrder = async (form_data: FormData, cart_id: string) => {
     },
   });
 };
-
-export const getCartFromId = async (cart_id: string) => {
-  const cart = await prisma.cart.findUnique({
-    where: {
-      id: cart_id,
-    },
-    include: {
-      items: { include: { product: true } },
-    },
-  });
-  return cart
-    ? {
-        ...cart,
-        size: cart.items.reduce((acc, item) => acc + item.quantity, 0),
-        subtotal: cart.items.reduce(
-          (acc, item) => acc + item.quantity * item.product.price,
-          0,
-        ),
-      }
-    : null;
-};
