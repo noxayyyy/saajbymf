@@ -41,27 +41,22 @@ async function addProduct(form_data: FormData) {
 	const stock_xl = Number(form_data.get("stock_xl"));
 
 	const sizes_bools = [size_s, size_m, size_l, size_xl];
-	const sizes = [];
-	const stocks: Stock[] = [];
+	const stock: Stock[] = [];
 
 	if (sizes_bools[0]) {
-		sizes.push(Size.SMALL);
-		stocks.push({ size: Size.SMALL, qty: stock_s });
+		stock.push({ size: Size.S, qty: stock_s });
 	}
 	if (sizes_bools[1]) {
-		sizes.push(Size.MEDIUM);
-		stocks.push({ size: Size.MEDIUM, qty: stock_m });
+		stock.push({ size: Size.M, qty: stock_m });
 	}
 	if (sizes_bools[2]) {
-		sizes.push(Size.LARGE);
-		stocks.push({ size: Size.LARGE, qty: stock_l });
+		stock.push({ size: Size.L, qty: stock_l });
 	}
 	if (sizes_bools[3]) {
-		sizes.push(Size.EXTRA_LARGE);
-		stocks.push({ size: Size.EXTRA_LARGE, qty: stock_xl });
+		stock.push({ size: Size.XL, qty: stock_xl });
 	}
 
-	if (!name || !sku || !desc || !image_urls[0] || !sizes[0] || !cost) {
+	if (!name || !sku || !desc || !image_urls[0] || !stock[0] || !cost) {
 		throw ("Missing required fields.");
 	}
 
@@ -79,8 +74,7 @@ async function addProduct(form_data: FormData) {
 				desc,
 				image_urls,
 				price: cost,
-				sizes: sizes as Size[],
-				stocks: stocks,
+				stock: stock,
 			},
 		});
 		name = name.split(" ")[0];

@@ -64,7 +64,7 @@ const Magnifier = ({ image }: { image: Image }) => {
 					alt={image.alt}
 					width={600}
 					height={600}
-					className="w-auto h-full rounded-lg"
+					className="w-auto h-full rounded-lg object-cover"
 				/>
 				{isVisible && (
 					<>
@@ -89,7 +89,7 @@ const Magnifier = ({ image }: { image: Image }) => {
 			</div>
 			{isVisible && (
 				<div
-					className="hidden lg:block absolute left-full top-0 ml-8 border border-base-300"
+					className="hidden lg:block absolute left-full top-0 ml-8 border border-base-300 z-40"
 					style={{
 						...magnifierStyle,
 						width: `${MAGNIFIER_SIZE}px`,
@@ -107,7 +107,7 @@ function ProductImageMagnifier({ images }: ProductImageMagnifierProps) {
 
 	return (
 
-		<div className="flex flex-col lg:flex-row gap-4 w-full relative">
+		<div className="flex flex-col lg:flex-row gap-4 min-w-fit w-full relative">
 			{/* Thumbnail Column */}
 			<div className="flex flex-row lg:flex-col gap-2 order-last lg:order-first">
 				{images.map((image) => (
@@ -127,7 +127,7 @@ function ProductImageMagnifier({ images }: ProductImageMagnifierProps) {
 			</div>
 
 			{/* Main Display Area */}
-			<div className="w-full">
+			<div className="w-full min-w-full">
 				<div className="hidden lg:flex">
 					<Magnifier image={activeImage} />
 				</div>

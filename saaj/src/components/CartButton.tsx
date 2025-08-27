@@ -3,6 +3,8 @@
 import { ShoppingCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/cost";
 import CartItemCard from "./CartItemCard";
+import Link from "next/link";
+import { useState } from "react";
 
 interface CartButtonProps {
 	cart: ShoppingCart | null;
@@ -12,10 +14,18 @@ interface CartButtonProps {
 };
 
 export default function CartButton({ cart, currency, conversion_rate, className }: CartButtonProps) {
+	const [is_open, setOpen] = useState(false);
+
 	return (
 		<div className={className}>
 			<div className="drawer drawer-end">
-				<input id="cart-drawer" type="checkbox" className="drawer-toggle" />
+				<input
+					id="cart-drawer"
+					type="checkbox"
+					className="drawer-toggle"
+					checked={is_open}
+					onChange={() => setOpen(!is_open)}
+				/>
 				<div className="drawer-content">
 					{/* Page content here */}
 					<label htmlFor="cart-drawer" tabIndex={0} className="drawer-button btn btn-ghost btn-circle">
@@ -57,7 +67,13 @@ export default function CartButton({ cart, currency, conversion_rate, className 
 								<p className="mb-3 font-bold">
 									Total: {formatPrice((cart?.subtotal || 0) * conversion_rate, currency)}
 								</p>
-								<button className="btn btn-primary rounded-lg sm:w-[150px]">Checkout</button>
+								<Link
+									href={`/checkout?cartId=${cart?.id}`}
+									className="btn btn-primary rounded-lg sm:w-[150px]"
+									onClick={() => setOpen(false)}
+								>
+									Checkout
+								</Link>
 							</div>
 						</div>
 					</div>

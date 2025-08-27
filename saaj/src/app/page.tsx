@@ -37,7 +37,7 @@ export default async function Home({ searchParams }: HomeProps) {
 	return (
 		<div className="flex flex-col" id="product-page">
 			<div className="flex w-full justify-between mt-4">
-				<FilterDrawer max_price={price_max_overall} currency={currency} conversion_rate={conversion_rate} className="justify-start" />
+				<FilterDrawer pmin={price_min} pmax={price_max} max_price={price_max_overall} currency={currency} conversion_rate={conversion_rate} className="justify-start" />
 				<SortSelect sort={`${sort_by}-${sort_ord}`} className={"select-md font-semibold select-secondary rounded-4xl justify-end hover:bg-base-300 hover:select-primary transition ease-out duration-200"} />
 			</div>
 			<ProductGrid products={products} page_size={page_size} currency={currency} conversion_rate={conversion_rate} />

@@ -109,6 +109,7 @@ export async function mergeCarts(user_id: string) {
               data: merged_items.map((item) => ({
                 product_id: item.product_id,
                 quantity: item.quantity,
+                size: item.size,
               })),
             },
           },
@@ -131,6 +132,7 @@ export async function mergeCarts(user_id: string) {
             data: local_cart.items.map((item) => ({
               product_id: item.product_id,
               quantity: item.quantity,
+              size: item.size,
             })),
           },
         },

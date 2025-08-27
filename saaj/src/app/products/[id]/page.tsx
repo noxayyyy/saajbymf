@@ -1,6 +1,8 @@
 import AddToCartButton from "@/components/AddToCartButton";
 import CostTag from "@/components/CostTag";
+import ProductDetails from "@/components/ProductDetails";
 import ProductImageMagnifier from "@/components/ProductImageMagnifier";
+import { Size } from "@/generated/prisma";
 import { getCurrency, getConversionRate } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
 import { Metadata } from "next";
@@ -56,45 +58,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
 	return (
 		<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 			{/* THE MAIN LAYOUT GRID */}
-			<div className="flex flex-col items-center gap-12">
+			<div className="flex flex-col lg:flex-row items-center gap-12">
 
 				{/* --- Left Column: Image Gallery --- */}
 				<ProductImageMagnifier images={images} />
+				<ProductDetails product={product} currency={currency} conversion_rate={conversion_rate} />
 
 				{/* --- Right Column: Product Details --- */}
-				<div className="w-full text-center max-w-2xl space-y-4">
-					{/* Product Name */}
-					<h1 className="text-4xl font-extrabold tracking-tight text-base-content sm:text-5xl">
-						{product.name}
-					</h1>
-
-					{/* SKU and Price */}
-					<div className="flex justify-center items-center gap-4">
-						<p className="text-sm text-base-content/70">SKU: {product.sku}</p>
-						<div className="badge badge-accent badge-outline">In Stock</div>
-					</div>
-
-					<div>
-						<CostTag price={product.price} currency={currency} conversion_rate={conversion_rate} className="text-3xl p-4" />
-					</div>
-
-					{/* Divider */}
-					<div className="divider"></div>
-
-					{/* Product Description */}
-					<div>
-						<h2 className="text-xl font-semibold text-base-content">Description</h2>
-						<p className="text-base-content/80 mt-2">
-							{product.desc}
-						</p>
-					</div>
-
-					{/* Add to Cart Section */}
-					{/* Constrain the button width for better aesthetics */}
-					<div className="w-full max-w-sm mx-auto pt-4">
-						<AddToCartButton product_id={product.id} />
-					</div>
-				</div>
 			</div>
 		</div>
 	);

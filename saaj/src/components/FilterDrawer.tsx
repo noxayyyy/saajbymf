@@ -1,33 +1,47 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useTransition } from "react";
 import PriceFilter from "./PriceFilter";
 
 interface FilterDrawerProps {
+	pmin: number;
+	pmax: number
 	max_price: number;
 	currency: string;
 	conversion_rate: number;
 	className?: string;
 }
 
-export default function FilterDrawer({ max_price, currency, conversion_rate, className }: FilterDrawerProps) {
+export default function FilterDrawer({ pmin, pmax, max_price, currency, conversion_rate, className }: FilterDrawerProps) {
 	const router = useRouter();
 	const pathname = usePathname();
 	const search_params = useSearchParams();
 	const params = new URLSearchParams(search_params.toString());
 
-	const [price_values, setPriceValues]: [[number, number], Dispatch<SetStateAction<[number, number]>>] = useState([0, max_price]);
+	const [is_open, setOpen] = useState(false);
+	const [price_values, setPriceValues]: [[number, number], Dispatch<SetStateAction<[number, number]>>] = useState([pmin, pmax]);
+
+	const [pending, startTransition] = useTransition();
 
 	function applyFilters() {
-		params.set("pmin", price_values[0].toString());
-		params.set("pmax", price_values[1].toString());
-		router.push(`${pathname}?${params.toString()}`);
+		startTransition(() => {
+			params.set("pmin", price_values[0].toString());
+			params.set("pmax", price_values[1].toString());
+			router.push(`${pathname}?${params.toString()}`);
+			setOpen(false);
+		});
 	}
 
 	return (
 		<div className={`drawer ${className}`}>
-			<input id="filter-drawer" type="checkbox" className="drawer-toggle" />
+			<input
+				id="filter-drawer"
+				type="checkbox"
+				className="drawer-toggle"
+				checked={is_open}
+				onChange={() => setOpen(!is_open)}
+			/>
 			<div className="drawer-content">
 				{/* Page content here */}
 				<label htmlFor="filter-drawer" className="btn btn-outline hover:btn-primary rounded-4xl">
@@ -55,8 +69,9 @@ export default function FilterDrawer({ max_price, currency, conversion_rate, cla
 							<button
 								className="btn btn-primary rounded-lg sm:w-[150px]"
 								onClick={applyFilters}
+								disabled={pending}
 							>
-								Apply
+								{pending ? <span className="loading loading-spinner"></span> : "Apply"}
 							</button>
 						</div>
 					</div>
