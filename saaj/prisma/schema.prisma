@@ -146,6 +146,7 @@ model Order {
     zip_code     String
     payment      String
     payment_type String
+    total        String
     created_at   DateTime    @default(now())
     updated_at   DateTime    @updatedAt
     expires      DateTime

@@ -6,6 +6,7 @@ import CheckoutInfoForm from "./CheckoutInfoForm";
 import OrderSummary from "./OrderSummary";
 import { useEffect, useState } from "react";
 import { addOrder } from "@/app/checkout/actions";
+import { formatPrice } from "@/lib/cost";
 
 interface CheckoutProps {
 	cart: ShoppingCart,
@@ -29,11 +30,15 @@ export default function Checkout({ cart, currency, conversion_rate }: CheckoutPr
 		setShipping(45000);
 	}, [country_iso2]);
 
-	console.log(country_iso2);
+	const [total, setTotal] = useState("");
+
+	useEffect(() => {
+		setTotal(formatPrice((cart.subtotal + (shipping ? shipping : 0)) * conversion_rate, currency));
+	})
 
 	return (
 		<div className="flex flex-col lg:flex-row w-full gap-4">
-			<CheckoutInfoForm cart_id={cart.id} setCountryCodeAction={setCountryCode} addOrderAction={addOrder} />
+			<CheckoutInfoForm cart_id={cart.id} setCountryCodeAction={setCountryCode} addOrderAction={addOrder} total={total} />
 			<div className="flex flex-col order-first w-full lg:order-last">
 				<div className={`mx-auto collapse collapse-arrow lg:h-8 lg:collapse-open lg:flex-grow w-full lg:overflow-y-auto`}>
 					<input type="checkbox" className="lg:pointer-events-none" />
@@ -44,7 +49,7 @@ export default function Checkout({ cart, currency, conversion_rate }: CheckoutPr
 						))}
 					</div>
 				</div>
-				<OrderSummary cart={cart} currency={currency} shipping={shipping} />
+				<OrderSummary cart={cart} currency={currency} conversion_rate={conversion_rate} shipping={shipping} />
 			</div>
 		</div>
 	);

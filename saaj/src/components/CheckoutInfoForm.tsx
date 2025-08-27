@@ -11,10 +11,11 @@ import FormSubmitButton from "./FormSubmitButton";
 interface CheckoutInfoFormProps {
 	cart_id: string,
 	setCountryCodeAction: (name: string) => void,
-	addOrderAction: (form_data: FormData, cart_id: string) => Promise<void>,
+	addOrderAction: (form_data: FormData, cart_id: string, total: string) => Promise<void>,
+	total: string,
 }
 
-export default function CheckoutInfoForm({ cart_id, setCountryCodeAction: setCountryCode, addOrderAction: addOrder }: CheckoutInfoFormProps) {
+export default function CheckoutInfoForm({ cart_id, setCountryCodeAction: setCountryCode, addOrderAction: addOrder, total }: CheckoutInfoFormProps) {
 	const [country_id, setCountryId] = useState<number | null>(null);
 	const [state_id, setStateId] = useState<number | null>(null);
 
@@ -55,7 +56,7 @@ export default function CheckoutInfoForm({ cart_id, setCountryCodeAction: setCou
 			<h1 className="font-semibold collapse-title text-lg">Checkout Information</h1>
 			<form
 				className="space-y-4 max-w-xl mx-auto p-4 md:p-8 rounded-lg shadow-lg collapse-content"
-				action={(e) => addOrder(e, cart_id)}
+				action={(e) => addOrder(e, cart_id, total)}
 			>
 				{/* First Name & Last Name (in a grid for side-by-side layout) */}
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

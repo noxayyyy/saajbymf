@@ -48,7 +48,11 @@ export async function getCart(): Promise<ShoppingCart | null> {
     cart = await prisma.cart.findFirst({
       where: { userId: session.user.id },
       include: {
-        items: { include: { product: true } },
+        items: {
+          include: {
+            product: true,
+          },
+        },
       },
     });
   } else {

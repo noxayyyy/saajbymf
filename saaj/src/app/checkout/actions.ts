@@ -6,7 +6,11 @@ import { auth_opts } from "../api/auth/[...nextauth]/route";
 import { notFound } from "next/navigation";
 import { OrderStatus } from "@/generated/prisma";
 
-export const addOrder = async (form_data: FormData, cart_id: string) => {
+export const addOrder = async (
+  form_data: FormData,
+  cart_id: string,
+  total: string,
+) => {
   const session = await getServerSession(auth_opts);
   if (!session) {
     notFound();
@@ -46,6 +50,7 @@ export const addOrder = async (form_data: FormData, cart_id: string) => {
           zip_code: zip,
           payment: img_data,
           payment_type: img_type,
+          total: total,
           expires: new Date(now.setDate(now.getDate() + 3)),
           status: OrderStatus.PENDING,
         },
