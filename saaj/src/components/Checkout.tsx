@@ -34,7 +34,7 @@ export default function Checkout({ cart, currency, conversion_rate }: CheckoutPr
 
 	useEffect(() => {
 		setTotal(formatPrice((cart.subtotal + (shipping ? shipping : 0)) * conversion_rate, currency));
-	})
+	}, [cart.subtotal, shipping]);
 
 	return (
 		<div className="flex flex-col lg:flex-row w-full gap-4">
