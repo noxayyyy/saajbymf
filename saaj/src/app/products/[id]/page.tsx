@@ -1,8 +1,5 @@
-import AddToCartButton from "@/components/AddToCartButton";
-import CostTag from "@/components/CostTag";
 import ProductDetails from "@/components/ProductDetails";
 import ProductImageMagnifier from "@/components/ProductImageMagnifier";
-import { Size } from "@/generated/prisma";
 import { getCurrency, getConversionRate } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
 import { Metadata } from "next";
