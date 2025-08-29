@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
       { hostname: "flagcdn.com" },
     ],
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "5mb",
+    },
+  },
 };
 
 export default nextConfig;

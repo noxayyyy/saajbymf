@@ -12,7 +12,19 @@ export const addOrder = async (
   total: string,
 ) => {
   const session = await getServerSession(auth_opts);
-  if (!session) {
+  const cart = await prisma.cart.findUnique({
+    where: {
+      id: cart_id,
+    },
+    include: {
+      items: {
+        include: {
+          product: true,
+        },
+      },
+    },
+  });
+  if (!session || !cart) {
     notFound();
   }
   const now = new Date();
@@ -38,7 +50,6 @@ export const addOrder = async (
     data: {
       order: {
         create: {
-          cartId: cart_id,
           first_name: first_name,
           last_name: last_name,
           email: email,
@@ -51,6 +62,13 @@ export const addOrder = async (
           payment: img_data,
           payment_type: img_type,
           total: total,
+          items: cart.items.map((p) => {
+            return {
+              sku: p.product.sku,
+              size: p.size,
+              qty: p.quantity,
+            };
+          }),
           expires: new Date(now.setDate(now.getDate() + 3)),
           status: OrderStatus.PENDING,
         },

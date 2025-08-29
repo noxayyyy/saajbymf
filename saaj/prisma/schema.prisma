@@ -52,7 +52,6 @@ model Cart {
     updated_at DateTime   @updatedAt
     user       User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId     String?    @db.ObjectId
-    order      Order[]
 
     @@map("carts")
 }
@@ -133,8 +132,7 @@ model Order {
     id           String      @id @default(auto()) @map("_id") @db.ObjectId
     user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId       String      @db.ObjectId
-    cart         Cart        @relation(fields: [cartId], references: [id])
-    cartId       String      @db.ObjectId
+    items        Json
     first_name   String
     last_name    String
     email        String
