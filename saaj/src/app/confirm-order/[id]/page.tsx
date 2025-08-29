@@ -18,6 +18,7 @@ export default async function ConfirmOrderPage({ params }: ConfirmOrderPageProps
 			},
 		});
 	} catch (err) {
+		console.error(err);
 		ok = false;
 	}
 
