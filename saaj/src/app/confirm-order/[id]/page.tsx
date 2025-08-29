@@ -1,4 +1,4 @@
-import { env } from "@/lib/env";
+import { prisma } from "@/lib/prisma";
 
 interface ConfirmOrderPageProps {
 	params: Promise<{ id: string, }>
@@ -6,24 +6,24 @@ interface ConfirmOrderPageProps {
 
 export default async function ConfirmOrderPage({ params }: ConfirmOrderPageProps) {
 	const order_id = (await params).id;
-	console.log(`Order: ${order_id}`);
+	let ok = true;
 
-	const res = await fetch("https://saajbymf.com/api/update-order/", {
-		method: "POST",
-		headers: {
-			"ContentType": "application/json",
-			"Authorization": `Bearer ${env.ORDER_SECRET}`,
-		},
-		body: JSON.stringify({
-			"order": order_id,
-		}),
-	});
-	console.log(res.status);
-	console.log(res.statusText);
+	try {
+		await prisma.order.update({
+			where: {
+				id: order_id,
+			},
+			data: {
+				status: "CONFIRMED",
+			},
+		});
+	} catch (err) {
+		ok = false;
+	}
 
 	return (
 		<div>
-			<h1>`Order# ${res.ok ? "Confirmed" : "Failed"}`</h1>
+			<h1>`Order# ${ok ? "Confirmed" : "Failed"}`</h1>
 		</div>
 	)
 }
