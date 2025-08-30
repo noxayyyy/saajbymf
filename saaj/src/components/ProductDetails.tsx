@@ -36,6 +36,52 @@ export default function ProductDetails({ product, currency, conversion_rate }: P
 			<div className="flex justify-center items-center">
 				<CostTag price={product.price} currency={currency} conversion_rate={conversion_rate} className="text-3xl p-4" />
 			</div>
+			<button className="" onClick={() => (document.getElementById('my_modal_2') as HTMLDialogElement).showModal()}>Size Chart</button>
+			<dialog id="my_modal_2" className="modal">
+				<div className="modal-box">
+					<h3 className="font-bold text-lg">Size Chart</h3>
+					<div className="overflow-x-auto">
+						<table className="table">
+							<thead>
+								<tr>
+									<th>Size</th>
+									<th></th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr className="bg-gray-200">
+									<th>S</th>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<th>M</th>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<th>L</th>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<th>XL</th>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<form method="dialog" className="modal-backdrop">
+					<button>close</button>
+				</form>
+			</dialog>
 
 			{/* Divider */}
 			<div className="divider"></div>

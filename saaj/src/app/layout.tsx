@@ -1,4 +1,5 @@
-import type { Metadata } from "next"; import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono, Cinzel } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -7,12 +8,17 @@ import CurrencySelector from "@/components/CurrencySelector";
 import { getCurrency } from "@/lib/currency";
 
 const geistSans = Geist({
-	variable: "--font-geist-sans",
+	variable: "--font-sans",
 	subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-	variable: "--font-geist-mono",
+	variable: "--font-mono",
+	subsets: ["latin"],
+});
+
+const cinzelSerif = Cinzel({
+	variable: "--font-serif",
 	subsets: ["latin"],
 });
 
@@ -31,12 +37,12 @@ export default async function RootLayout({
 	return (
 		<html lang="en" data-theme="saaj" className="scroll-smooth">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+				className={`${geistSans.variable} ${geistMono.variable} ${cinzelSerif.variable} antialiased`}
 			>
 				<SessionProvider>
-					<div className="flex flex-col min-h-screen">
+					<div className="flex flex-col min-h-screen overflow-x-clip">
 						<Navbar />
-						<main className="flex-1 flex-grow p-4 max-w-7xl w-full m-auto min-w-[300px]">
+						<main className="flex-1 flex-grow p-4 max-w-7xl w-full m-auto min-w-[300px] overflow-visible">
 							{children}
 						</main>
 						<Footer />

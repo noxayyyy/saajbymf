@@ -186,7 +186,7 @@ export default function CheckoutInfoForm({ cart_id, setCountryCodeAction: setCou
 								<option value={""}>-- Select City --</option>
 								{
 									cities.map((c) => (
-										<option key={c.id} value={`${c.id, c.name}`}>
+										<option key={c.id} value={`${c.id},${c.name}`}>
 											{c.name}
 										</option>
 									))

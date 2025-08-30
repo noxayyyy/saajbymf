@@ -89,7 +89,7 @@ const Magnifier = ({ image }: { image: Image }) => {
 			</div>
 			{isVisible && (
 				<div
-					className="hidden lg:block absolute left-full top-0 ml-8 border border-base-300 z-40"
+					className="hidden lg:block absolute left-full top-0 ml-8 border border-base-300 z-4"
 					style={{
 						...magnifierStyle,
 						width: `${MAGNIFIER_SIZE}px`,

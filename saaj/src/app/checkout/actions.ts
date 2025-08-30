@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { auth_opts } from "../api/auth/[...nextauth]/route";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { OrderStatus } from "@/generated/prisma";
 
 export const addOrder = async (
@@ -34,9 +34,9 @@ export const addOrder = async (
   const phone = form_data.get("phone")?.toString() || "";
 
   const street = form_data.get("street")?.toString() || "";
-  const country = form_data.get("country")?.toString() || "";
-  const state = form_data.get("state")?.toString() || "";
-  const city = form_data.get("city")?.toString() || "";
+  const country = form_data.get("country")?.toString().split(",")[1] || "";
+  const state = form_data.get("state")?.toString().split(",")[1] || "";
+  const city = form_data.get("city")?.toString().split(",")[1] || "";
   const zip = form_data.get("zip")?.toString() || "";
 
   const img = form_data.get("payment") as File;
@@ -75,4 +75,12 @@ export const addOrder = async (
       },
     },
   });
+
+  await prisma.cart.delete({
+    where: {
+      id: cart.id,
+    },
+  });
+
+  redirect("/");
 };

@@ -55,7 +55,7 @@ export default function FilterDrawer({ pmin, pmax, max_price, currency, conversi
 					Filter
 				</label>
 			</div>
-			<div className="drawer-side">
+			<div className="drawer-side z-50">
 				<label htmlFor="filter-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
 				<div className="flex flex-col h-screen w-85 text-base-content bg-base-100">
 					<ul className="p-4 flex-1 overflow-y-auto">

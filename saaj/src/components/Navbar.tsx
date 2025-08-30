@@ -15,7 +15,7 @@ export default async function Navbar() {
 	const conversion_rate = await getConversionRate(currency);
 
 	return (
-		<div className="bg-base-200">
+		<div className="bg-base-200 top-0 left-0 sticky z-5">
 			<div className="navbar max-w-7xl mx-auto flex-col sm:flex-row gap-2">
 				<div className="navbar-start">
 				</div>
