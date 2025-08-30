@@ -16,8 +16,13 @@ const slides = [
 	},
 	{
 		id: 3,
-		src: "https://lh3.googleusercontent.com/d/19u8Dn_S-ojrpgD6kcUmsSGUhJ9LbpHb9",
+		src: "https://lh3.googleusercontent.com/d/1Lj3Y4SAyy5sCMmw82hhmsWkoh3fkHmdM",
 		alt: "Third slide"
+	},
+	{
+		id: 4,
+		src: "https://lh3.googleusercontent.com/d/1PiGBF_iSg6XZnjOBFwZK5v-WxrNOZ_9h",
+		alt: "Fourth slide"
 	}
 ];
 
