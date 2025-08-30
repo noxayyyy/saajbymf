@@ -30,12 +30,39 @@ type Stock {
     qty  Int
 }
 
+enum Fabric {
+    Cambric
+    Chiffon
+    Lawn
+    Net
+    Organza
+    Satin
+}
+
+enum Design {
+    Embroidered
+    Printed
+}
+
+enum Material {
+    Cotton
+    Linen
+    Polyester
+    Silk
+    Viscose
+}
+
 model Product {
     id         String     @id @default(auto()) @map("_id") @db.ObjectId
     desc       String
     image_urls String[]
     name       String
     sku        String
+    pcs        Int
+    fabric     Fabric
+    material   Material
+    design     Design
+    colour     String
     created_at DateTime   @default(now())
     updated_at DateTime   @updatedAt
     cart_item  CartItem[]
@@ -128,11 +155,17 @@ enum OrderStatus {
     COMPLETE
 }
 
+type OrderItem {
+    sku  String
+    qty  Int
+    size Size
+}
+
 model Order {
     id           String      @id @default(auto()) @map("_id") @db.ObjectId
     user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId       String      @db.ObjectId
-    items        Json
+    items        OrderItem[]
     first_name   String
     last_name    String
     email        String

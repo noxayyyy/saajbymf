@@ -57,7 +57,7 @@ const Magnifier = ({ image }: { image: Image }) => {
 				onMouseMove={handleMouseMove}
 				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
-				className="w-auto h-[600px] relative rounded-lg cursor-crosshair"
+				className="w-auto h-[800px] relative rounded-lg cursor-crosshair"
 			>
 				<Image
 					src={image.src}

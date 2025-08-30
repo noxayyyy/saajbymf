@@ -51,7 +51,7 @@ export default function CartButton({ cart, currency, conversion_rate, className 
 				</div>
 				<div className="drawer-side z-50">
 					<label htmlFor="cart-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-					<div className="flex flex-col h-screen w-100 text-base-content bg-base-100">
+					<div className="flex flex-col h-screen w-85 text-base-content bg-base-100">
 						<div className="shadow-2xl">
 							<h1 className="text-3xl font-semibold pl-4 pt-2">SHOPPING CART</h1>
 							<div className="divider my-0 divider-secondary"></div>

@@ -39,7 +39,11 @@ export default function ProductCard({ product, conversion_rate, currency }: Prod
 				</figure>
 
 			</Link>
-			<div className="flex w-full justify-between items-center font-thin py-1">
+			<div className="flex w-full py-1 justify-between items-center font-thin pr-1">
+				<span className="fieldset-label text-xs justify-start">{`${product.material}|${product.fabric}`}</span>
+				<span className="fieldset-label text-xs justify-end">{`${product.pcs}pc`}</span>
+			</div>
+			<div className="flex w-full justify-between items-center font-thin pb-1">
 				<div className="justify-start">
 					{product.name}
 				</div>

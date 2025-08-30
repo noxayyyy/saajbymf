@@ -19,7 +19,7 @@ export const getMaxPrice = unstable_cache(
     )?.price || 0,
   ["max_price"],
   {
-    revalidate: 600,
+    revalidate: 5,
   },
 );
 

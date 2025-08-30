@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import FormSubmitButton from "./FormSubmitButton";
+import { Design, Fabric, Material } from "@/generated/prisma";
 
 interface AddProductFormProps {
 	action: (arg: FormData) => Promise<void>;
@@ -20,34 +21,98 @@ export default function AddProductForm({ action }: AddProductFormProps) {
 				name="name"
 				placeholder="Name"
 				className="input input-bordered mb-3 w-full"
+				required
 			/>
 			<input
 				name="sku"
 				placeholder="SKU"
 				className="input input-bordered mb-3 w-full"
+				required
 			/>
 			<textarea
 				name="desc"
 				className="textarea textarea-bordered mb-3 w-full"
 				placeholder="Description"
+				required
 			/>
-
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+				<label>
+					<span className="fieldset-label">Pcs</span>
+					<input
+						name="pcs"
+						type="number"
+						min="1"
+						defaultValue="1"
+						placeholder="Pcs"
+						className="input input-bordered mb-3"
+					/>
+				</label>
+				<label>
+					<span className="fieldset-label">Material</span>
+					<select
+						name="material"
+						className="select mb-3"
+						required
+					>
+						<option value={Material.Cotton}>Cotton</option>
+						<option value={Material.Linen}>Linen</option>
+						<option value={Material.Polyester}>Polyester</option>
+						<option value={Material.Silk}>Silk</option>
+						<option value={Material.Viscose}>Viscose</option>
+					</select>
+				</label>
+				<label>
+					<span className="fieldset-label">Fabric</span>
+					<select
+						name="fabric"
+						className="select mb-3"
+						required
+					>
+						<option value={Fabric.Cambric}>Cambric</option>
+						<option value={Fabric.Chiffon}>Chiffon</option>
+						<option value={Fabric.Lawn}>Lawn</option>
+						<option value={Fabric.Net}>Net</option>
+						<option value={Fabric.Organza}>Organza</option>
+						<option value={Fabric.Satin}>Satin</option>
+					</select>
+				</label>
+				<label>
+					<span className="fieldset-label">Design</span>
+					<select
+						name="design"
+						className="select mb-3"
+						required
+					>
+						<option value={Design.Embroidered}>Embroidered</option>
+						<option value={Design.Printed}>Printed</option>
+					</select>
+				</label>
+				<label>
+					<span className="fieldset-label">Colour</span>
+					<input
+						name="colour"
+						placeholder="Colour"
+						className="input input-bordered mb-3"
+						required
+					/>
+				</label>
+			</div>
 			<fieldset className="fieldset font-bold flex w-full mb-3">
 				<legend className="fieldset-legend">Sizes</legend>
 				<label className="label px-2">
-					<input type="checkbox" name="size_s" className="checkbox checked:checkbox-primary" />
+					<input type="checkbox" name="size_s" className="checkbox checked:checkbox-primary" required />
 					Small
 				</label>
 				<label className="label px-2">
-					<input type="checkbox" name="size_m" className="checkbox checked:checkbox-primary" />
+					<input type="checkbox" name="size_m" className="checkbox checked:checkbox-primary" required />
 					Medium
 				</label>
 				<label className="label px-2">
-					<input type="checkbox" name="size_l" className="checkbox checked:checkbox-primary" />
+					<input type="checkbox" name="size_l" className="checkbox checked:checkbox-primary" required />
 					Large
 				</label>
 				<label className="label px-2">
-					<input type="checkbox" name="size_xl" className="checkbox checked:checkbox-primary" />
+					<input type="checkbox" name="size_xl" className="checkbox checked:checkbox-primary" required />
 					X Large
 				</label>
 			</fieldset>
@@ -125,9 +190,10 @@ export default function AddProductForm({ action }: AddProductFormProps) {
 					type="number"
 					step="0.01"
 					min="0"
+					required
 				/>
 			</label>
 			<FormSubmitButton className="btn-block">Add Product</FormSubmitButton>
-		</form>
+		</form >
 	);
 }
