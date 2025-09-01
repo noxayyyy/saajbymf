@@ -50,7 +50,7 @@ export default function CartItemCard({ item: { product, quantity, size }, curren
 						<div className="my-1 flex items-center gap-2 font-semibold text-md">
 							Qty:
 							<select
-								className="select rounded-xl max-h-8 w-full max-w-[70px] text-black focus:outline-hidden"
+								className="select rounded-xl max-h-8 w-full max-w-[70px] text-black focus:outline-hidden font-sans"
 								value={quantity}
 								onChange={menu => {
 									const new_qty = parseInt(menu.currentTarget.value);
@@ -65,7 +65,7 @@ export default function CartItemCard({ item: { product, quantity, size }, curren
 						</div>
 						{pending && <span className="loading loading-spinner loading-sm" />}
 					</div>
-					<div className="flex items-center gap-2 text-lg font-bold">
+					<div className="flex items-center gap-2 text-lg font-bold font-sans">
 						{formatPrice(product.price * quantity * conversion_rate, currency)}
 					</div>
 				</div>

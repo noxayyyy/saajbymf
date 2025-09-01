@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import FormSubmitButton from "./FormSubmitButton";
-import { Design, Fabric, Material } from "@/generated/prisma";
+import { Design } from "@/generated/prisma";
 
 interface AddProductFormProps {
 	action: (arg: FormData) => Promise<void>;
@@ -20,19 +20,25 @@ export default function AddProductForm({ action }: AddProductFormProps) {
 			<input
 				name="name"
 				placeholder="Name"
-				className="input input-bordered mb-3 w-full"
+				className="input input-bordered mb-3 w-full font-sans"
 				required
 			/>
 			<input
 				name="sku"
 				placeholder="SKU"
-				className="input input-bordered mb-3 w-full"
+				className="input input-bordered mb-3 w-full font-sans"
 				required
 			/>
 			<textarea
 				name="desc"
-				className="textarea textarea-bordered mb-3 w-full"
+				className="textarea textarea-bordered mb-3 w-full font-sans"
 				placeholder="Description"
+				required
+			/>
+			<textarea
+				name="fabric_desc"
+				className="textarea textarea-bordered mb-3 w-full font-sans"
+				placeholder="Fabric Description e.g. Shirt: Raw Silk &emsp\; Trouser: Raw Silk &emsp\; Dupatta: Organza"
 				required
 			/>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -44,43 +50,23 @@ export default function AddProductForm({ action }: AddProductFormProps) {
 						min="1"
 						defaultValue="1"
 						placeholder="Pcs"
-						className="input input-bordered mb-3"
+						className="input input-bordered mb-3 font-sans"
 					/>
 				</label>
 				<label>
-					<span className="fieldset-label">Material</span>
-					<select
-						name="material"
-						className="select mb-3"
-						required
-					>
-						<option value={Material.Cotton}>Cotton</option>
-						<option value={Material.Linen}>Linen</option>
-						<option value={Material.Polyester}>Polyester</option>
-						<option value={Material.Silk}>Silk</option>
-						<option value={Material.Viscose}>Viscose</option>
-					</select>
-				</label>
-				<label>
 					<span className="fieldset-label">Fabric</span>
-					<select
+					<input
 						name="fabric"
-						className="select mb-3"
+						placeholder="Fabric"
+						className="input input-bordered mb-3 font-sans"
 						required
-					>
-						<option value={Fabric.Cambric}>Cambric</option>
-						<option value={Fabric.Chiffon}>Chiffon</option>
-						<option value={Fabric.Lawn}>Lawn</option>
-						<option value={Fabric.Net}>Net</option>
-						<option value={Fabric.Organza}>Organza</option>
-						<option value={Fabric.Satin}>Satin</option>
-					</select>
+					/>
 				</label>
 				<label>
 					<span className="fieldset-label">Design</span>
 					<select
 						name="design"
-						className="select mb-3"
+						className="select mb-3 font-sans"
 						required
 					>
 						<option value={Design.Embroidered}>Embroidered</option>
@@ -92,7 +78,7 @@ export default function AddProductForm({ action }: AddProductFormProps) {
 					<input
 						name="colour"
 						placeholder="Colour"
-						className="input input-bordered mb-3"
+						className="input input-bordered mb-3 font-sans"
 						required
 					/>
 				</label>
@@ -128,7 +114,7 @@ export default function AddProductForm({ action }: AddProductFormProps) {
 							min="0"
 							defaultValue="0"
 							placeholder="Quantity"
-							className="input input-bordered w-full join-item"
+							className="input input-bordered w-full join-item font-sans"
 						/>
 					</div>
 					<div className="join p-2 w-full">
@@ -139,7 +125,7 @@ export default function AddProductForm({ action }: AddProductFormProps) {
 							min="0"
 							defaultValue="0"
 							placeholder="Quantity"
-							className="input input-bordered w-full join-item"
+							className="input input-bordered w-full join-item font-sans"
 						/>
 					</div>
 					<div className="join p-2 w-full">
@@ -150,7 +136,7 @@ export default function AddProductForm({ action }: AddProductFormProps) {
 							min="0"
 							defaultValue="0"
 							placeholder="Quantity"
-							className="input input-bordered w-full join-item"
+							className="input input-bordered w-full join-item font-sans"
 						/>
 					</div>
 					<div className="join p-2 w-full">
@@ -161,7 +147,7 @@ export default function AddProductForm({ action }: AddProductFormProps) {
 							min="0"
 							defaultValue="0"
 							placeholder="Quantity"
-							className="input input-bordered w-full join-item"
+							className="input input-bordered w-full join-item font-sans"
 						/>
 					</div>
 				</div>
@@ -174,7 +160,7 @@ export default function AddProductForm({ action }: AddProductFormProps) {
 						name="image_url"
 						type="url"
 						placeholder={`Image URL ${index + 1}`}
-						className="input input-bordered mb-2 w-full"
+						className="input input-bordered mb-2 w-full font-sans"
 					/>
 				))}
 				<button type="button" className="btn btn-primary" onClick={addImageUrlField}>
@@ -188,6 +174,7 @@ export default function AddProductForm({ action }: AddProductFormProps) {
 					name="cost"
 					placeholder="Cost"
 					type="number"
+					className="font-sans"
 					step="0.01"
 					min="0"
 					required

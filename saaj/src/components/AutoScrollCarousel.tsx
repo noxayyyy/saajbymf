@@ -33,7 +33,7 @@ interface AutoScrollCarouselProps {
 }
 
 export default function AutoScrollCarousel({ className }: AutoScrollCarouselProps) {
-	const scrollInterval = 5000;
+	const scrollInterval = 3000;
 	const carouselRef = useRef<HTMLDivElement>(null);
 	const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -77,7 +77,7 @@ export default function AutoScrollCarousel({ className }: AutoScrollCarouselProp
 					<div key={slide.id} id={`slide${slide.id}`} className="carousel-item w-full relative">
 						<Image
 							src={slide.src}
-							className="w-full object-cover object-center"
+							className={`object-cover object-center h-full md:w-full`}
 							fill
 							alt={slide.alt}
 							priority={slide.id === 1}

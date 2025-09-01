@@ -30,44 +30,27 @@ type Stock {
     qty  Int
 }
 
-enum Fabric {
-    Cambric
-    Chiffon
-    Lawn
-    Net
-    Organza
-    Satin
-}
-
 enum Design {
     Embroidered
     Printed
 }
 
-enum Material {
-    Cotton
-    Linen
-    Polyester
-    Silk
-    Viscose
-}
-
 model Product {
-    id         String     @id @default(auto()) @map("_id") @db.ObjectId
-    desc       String
-    image_urls String[]
-    name       String
-    sku        String
-    pcs        Int
-    fabric     Fabric
-    material   Material
-    design     Design
-    colour     String
-    created_at DateTime   @default(now())
-    updated_at DateTime   @updatedAt
-    cart_item  CartItem[]
-    price      Float
-    stock      Stock[]
+    id          String     @id @default(auto()) @map("_id") @db.ObjectId
+    desc        String
+    fabric_desc String
+    image_urls  String[]
+    name        String
+    sku         String
+    pcs         Int
+    fabric      String
+    design      Design
+    colour      String
+    created_at  DateTime   @default(now())
+    updated_at  DateTime   @updatedAt
+    cart_item   CartItem[]
+    price       Float
+    stock       Stock[]
 
     @@map("products")
 }
@@ -92,6 +75,7 @@ model CartItem {
     cart_id    String  @db.ObjectId
     cart       Cart    @relation(fields: [cart_id], references: [id], onDelete: Cascade)
 
+    @@unique([cart_id, product_id, size])
     @@map("cart_items")
 }
 

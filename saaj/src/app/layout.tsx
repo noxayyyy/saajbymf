@@ -8,7 +8,7 @@ import CurrencySelector from "@/components/CurrencySelector";
 import { getCurrency } from "@/lib/currency";
 
 const geistSans = Geist({
-	variable: "--font-sans",
+	variable: "--font-geist-sans",
 	subsets: ["latin"],
 });
 
@@ -37,7 +37,7 @@ export default async function RootLayout({
 	return (
 		<html lang="en" data-theme="saaj" className="scroll-smooth">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} ${cinzelSerif.variable} antialiased`}
+				className={`${geistSans.variable} ${geistMono.variable} ${cinzelSerif.variable} antialiased font-serif`}
 			>
 				<SessionProvider>
 					<div className="flex flex-col min-h-screen overflow-x-clip">

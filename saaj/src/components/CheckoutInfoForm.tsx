@@ -68,7 +68,7 @@ export default function CheckoutInfoForm({ cart_id, setCountryCodeAction: setCou
 							type="text"
 							name="firstName"
 							placeholder="John"
-							className="input input-ghost border-b-black w-full rounded-none focus:outline-hidden focus:border-b-black"
+							className="input input-ghost border-b-black w-full rounded-none focus:outline-hidden focus:border-b-black font-sans"
 							required
 							minLength={2}
 						/>
@@ -81,7 +81,7 @@ export default function CheckoutInfoForm({ cart_id, setCountryCodeAction: setCou
 							type="text"
 							name="lastName"
 							placeholder="Doe"
-							className="input input-ghost border-b-black w-full rounded-none focus:outline-hidden focus:border-b-black"
+							className="input input-ghost border-b-black w-full rounded-none focus:outline-hidden focus:border-b-black font-sans"
 							required
 							minLength={2}
 						/>
@@ -97,7 +97,7 @@ export default function CheckoutInfoForm({ cart_id, setCountryCodeAction: setCou
 						type="email"
 						name="email"
 						placeholder="john.doe@example.com"
-						className="input input-ghost border-b-black w-full rounded-none focus:outline-hidden focus:border-b-black"
+						className="input input-ghost border-b-black w-full rounded-none focus:outline-hidden focus:border-b-black font-sans"
 						required
 					/>
 				</div>
@@ -111,6 +111,7 @@ export default function CheckoutInfoForm({ cart_id, setCountryCodeAction: setCou
 						defaultCountry="pk"
 						required
 						name="phone"
+						className="font-sans"
 						style={{
 							"--react-international-phone-border-color": "black",
 						} as React.CSSProperties}
@@ -127,7 +128,7 @@ export default function CheckoutInfoForm({ cart_id, setCountryCodeAction: setCou
 							type="text"
 							name="street"
 							placeholder="Street Address"
-							className="input input-ghost border-b-black w-full rounded-none focus:outline-hidden focus:border-b-black"
+							className="input input-ghost border-b-black w-full rounded-none focus:outline-hidden focus:border-b-black font-sans"
 							required
 							minLength={2}
 						/>
@@ -141,7 +142,7 @@ export default function CheckoutInfoForm({ cart_id, setCountryCodeAction: setCou
 									setCountryId(parseInt(id));
 									setCountryCode(code);
 								}}
-								className="select select-ghost border-b-black rounded-none focus:outline-hidden focus:border-b-black"
+								className="select select-ghost border-b-black rounded-none focus:outline-hidden focus:border-b-black font-sans"
 								name="country"
 								required
 							>
@@ -162,7 +163,7 @@ export default function CheckoutInfoForm({ cart_id, setCountryCodeAction: setCou
 									setStateId(parseInt(e.target.value.split(',')[0]));
 								}}
 								disabled={!has_states}
-								className="select select-ghost border-b-black rounded-none focus:outline-hidden focus:border-b-black disabled:select-ghost"
+								className="select select-ghost border-b-black rounded-none focus:outline-hidden focus:border-b-black disabled:select-ghost font-sans"
 								name="state"
 								required
 							>
@@ -180,7 +181,7 @@ export default function CheckoutInfoForm({ cart_id, setCountryCodeAction: setCou
 							<span className="text-xs opacity-70">City</span>
 							<select
 								disabled={!has_cities}
-								className="select select-ghost border-b-black rounded-none focus:outline-hidden focus:border-b-black disabled:select-ghost"
+								className="select select-ghost border-b-black rounded-none focus:outline-hidden focus:border-b-black disabled:select-ghost font-sans"
 								name="city"
 							>
 								<option value={""}>-- Select City --</option>
@@ -199,7 +200,7 @@ export default function CheckoutInfoForm({ cart_id, setCountryCodeAction: setCou
 								type="text"
 								name="zip"
 								placeholder="Postal Code"
-								className="input input-ghost border-b-black w-full rounded-none focus:outline-hidden focus:border-b-black"
+								className="input input-ghost border-b-black w-full rounded-none focus:outline-hidden focus:border-b-black font-sans"
 								required
 								minLength={2}
 							/>
@@ -213,7 +214,7 @@ export default function CheckoutInfoForm({ cart_id, setCountryCodeAction: setCou
 					</label>
 					<div className="card border-black bg-gray-300 text-base-content mb-2">
 						<div className="card-body">
-							<p className="">
+							<p className="font-sans">
 								Please transfer your total payment amount using the bank transfer details below and attach proof of payment here.
 								<br />
 								<br />

@@ -65,7 +65,7 @@ export default function CartButton({ cart, currency, conversion_rate, className 
 						<div className="text-lg">
 							<div className="flex flex-col items-center pb-4">
 								<p className="mb-3 font-bold">
-									Total: {formatPrice((cart?.subtotal || 0) * conversion_rate, currency)}
+									Total: {<span className="font-sans">{formatPrice((cart?.subtotal || 0) * conversion_rate, currency)}</span>}
 								</p>
 								<Link
 									href={`/checkout?cartId=${cart?.id}`}

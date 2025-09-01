@@ -109,12 +109,13 @@ function ProductImageMagnifier({ images }: ProductImageMagnifierProps) {
 
 		<div className="flex flex-col lg:flex-row gap-4 min-w-fit w-full relative">
 			{/* Thumbnail Column */}
-			<div className="flex flex-row lg:flex-col gap-2 order-last lg:order-first">
-				{images.map((image) => (
-					<div
+			<div className="flex flex-row mx-auto lg:flex-col lg:mx-0 gap-2 order-last lg:order-first">
+				{images.map((image, idx) => (
+					<a
 						key={image.id}
 						onClick={() => setActiveImage(image)}
 						className={`w-20 h-20 lg:w-24 lg:h-24 shrink-0 rounded-md cursor-pointer border-2 transition-all duration-200 ${activeImage.id === image.id ? "border-primary" : "border-base-300 hover:border-base-content/50"}`}
+						href={`#slide${idx}`}
 					>
 						<Image
 							src={image.src}
@@ -122,24 +123,31 @@ function ProductImageMagnifier({ images }: ProductImageMagnifierProps) {
 							width={600}
 							height={600}
 							className="w-full h-full object-cover rounded" />
-					</div>
+					</a>
 				))}
 			</div>
 
 			{/* Main Display Area */}
-			<div className="w-full min-w-full">
+			<div className="w-full">
 				<div className="hidden lg:flex">
 					<Magnifier image={activeImage} />
 				</div>
-
-				<div className="flex justify-center w-full max-h-[600px] rounded-lg lg:hidden">
-					<Image
-						src={activeImage.src}
-						alt={activeImage.alt}
-						width={600}
-						height={600}
-						className="h-full w-auto max-h-[600px] object-cover rounded-lg"
-					/>
+				<div className="carousel w-full max-h-[600px] rounded-lg lg:hidden">
+					{images.map((image, index) => (
+						<div
+							key={`slide-${image.id}`}
+							id={`slide${index}`} // Each slide needs a unique ID
+							className="carousel-item w-full max-h-[600px] lg:hidden justify-center relative"
+						>
+							<Image
+								src={image.src}
+								alt={image.alt}
+								width={600}
+								height={600}
+								className="h-full w-auto max-h-[600px] object-cover rounded-lg"
+							/>
+						</div>
+					))}
 				</div>
 			</div>
 		</div>

@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { notFound, redirect } from "next/navigation"
 import { auth_opts } from "../api/auth/[...nextauth]/route";
 import AddProductForm from "@/components/AddProductForm";
-import { Design, Fabric, Material, Size, Stock } from "@/generated/prisma";
+import { Design, Size, Stock } from "@/generated/prisma";
 import { env } from "@/lib/env";
 
 export const metadata = {
@@ -27,9 +27,9 @@ async function addProduct(form_data: FormData) {
 	const name = form_data.get("name")?.toString();
 	const sku = form_data.get("sku")?.toString();
 	const desc = form_data.get("desc")?.toString();
+	const fabric_desc = form_data.get("fabric_desc")?.toString();
 
 	const pcs = Number(form_data.get("pcs"));
-	const material = form_data.get("material")?.toString();
 	const fabric = form_data.get("fabric")?.toString();
 	const design = form_data.get("design")?.toString();
 	const colour = form_data.get("colour")?.toString();
@@ -63,7 +63,7 @@ async function addProduct(form_data: FormData) {
 		stock.push({ size: Size.XL, qty: stock_xl });
 	}
 
-	if (!name || !sku || !desc || !image_urls[0] || !stock[0] || !cost || !material || !fabric || !design || !colour) {
+	if (!name || !sku || !desc || !image_urls[0] || !stock[0] || !cost || !fabric || !design || !colour || !fabric_desc) {
 		throw ("Missing required fields.");
 	}
 
@@ -72,9 +72,9 @@ async function addProduct(form_data: FormData) {
 			name: name,
 			sku: sku,
 			desc: desc,
+			fabric_desc: fabric_desc,
 			pcs: pcs,
-			fabric: fabric as Fabric,
-			material: material as Material,
+			fabric: fabric,
 			design: design as Design,
 			colour: colour,
 			image_urls: image_urls,

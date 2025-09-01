@@ -5,6 +5,7 @@ import AddToCartButton from "./AddToCartButton";
 import CostTag from "./CostTag";
 import { useState } from "react";
 import SizeRadio from "./SizeRadio";
+import SizeChart from "./SizeChart";
 
 interface ProductDetailsProps {
 	product: Product;
@@ -33,63 +34,26 @@ export default function ProductDetails({ product, currency, conversion_rate }: P
 				}
 			</div>
 
+			<SizeChart size={size} />
+
 			<div className="flex justify-center items-center">
 				<CostTag price={product.price} currency={currency} conversion_rate={conversion_rate} className="text-3xl p-4" />
 			</div>
-			<button className="" onClick={() => (document.getElementById('my_modal_2') as HTMLDialogElement).showModal()}>Size Chart</button>
-			<dialog id="my_modal_2" className="modal">
-				<div className="modal-box">
-					<h3 className="font-bold text-lg">Size Chart</h3>
-					<div className="overflow-x-auto">
-						<table className="table">
-							<thead>
-								<tr>
-									<th>Size</th>
-									<th></th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr className="bg-gray-200">
-									<th>S</th>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-								<tr>
-									<th>M</th>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-								<tr>
-									<th>L</th>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-								<tr>
-									<th>XL</th>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-				<form method="dialog" className="modal-backdrop">
-					<button>close</button>
-				</form>
-			</dialog>
 
 			{/* Divider */}
-			<div className="divider"></div>
+			<div className="divider my-0"></div>
 
 			{/* Product Description */}
 			<div>
+				<h2 className="text-xl font-semibold text-base-content">Fabrics</h2>
+				<div className="flex flex-row gap-4 justify-center">
+					{product.fabric_desc.split(',').map((d, idx) => (
+						<span key={idx} className="text-base-content/80 mt-2 text-center">{d}</span>
+					))}
+				</div>
+				<div className="divider my-0"></div>
 				<h2 className="text-xl font-semibold text-base-content">Description</h2>
-				<p className="text-base-content/80 mt-2">
+				<p className="text-base-content/80 mt-2 text-left">
 					{product.desc}
 				</p>
 			</div>

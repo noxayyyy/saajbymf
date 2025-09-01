@@ -12,7 +12,7 @@ interface AddToCartButtonProps {
 export default function AddToCartButton({ product_id, size }: AddToCartButtonProps) {
 	const [pending, startTransition] = useTransition();
 	return (
-		<div className="flex items-center justify-center w-32 m-auto">
+		<div className="flex items-center justify-center w-fit m-auto">
 			<button
 				className="btn btn-primary w-full"
 				onClick={() => {
