@@ -18,16 +18,25 @@ export default async function Navbar() {
 		<div className="bg-base-200 top-0 left-0 sticky z-5 h-fit">
 			<div className="navbar max-w-7xl mx-auto flex-row gap-2">
 				<div className="navbar-start">
+					<div className="sm:hidden join-item w-fit">
+						<Search />
+					</div>
 				</div>
-				<div className="navbar-start md:navbar-center">
-					<Link href="/" className="h-24">
+				<div className="navbar-center">
+					<Link href="/" className="h-18 sm:h-24">
 						<LogoSvg className="h-full" />
 					</Link>
 				</div>
-				<div className="navbar-center flex-col md:flex-row gap-1 join">
-					<Search className="join-item" />
-					<CartButton cart={cart} currency={currency} conversion_rate={conversion_rate} className="join-item" />
-					<UserMenuButton session={session} className="join-item" />
+				<div className="flex join navbar-end gap-2">
+					<div className="hidden sm:block join-item">
+						<Search />
+					</div>
+					<div className="join-item">
+						<CartButton cart={cart} currency={currency} conversion_rate={conversion_rate} />
+					</div>
+					<div className="join-item">
+						<UserMenuButton session={session} />
+					</div>
 				</div>
 			</div>
 		</div>
