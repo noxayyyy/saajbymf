@@ -23,7 +23,7 @@ export default async function Navbar() {
 					</div>
 				</div>
 				<div className="navbar-center">
-					<Link href="/" className="h-18 sm:h-24">
+					<Link href="/" className="h-14 sm:h-24">
 						<LogoSvg className="h-full" />
 					</Link>
 				</div>
