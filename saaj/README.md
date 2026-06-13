@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SAAJ by MF — Luxury Pakistani Fashion E-Commerce
 
-## Getting Started
+> *Modernity in Heritage* — a full-stack e-commerce platform for SAAJ by MF.
 
-First, run the development server:
+## Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Frontend:** React 18 + Vite, Wouter, TanStack Query, Tailwind CSS, shadcn/ui, Framer Motion
+- **Backend:** Express 5, Node.js (TypeScript via `tsx`)
+- **Database:** PostgreSQL with Drizzle ORM
+- **Auth:** Session-based (`express-session` + `connect-pg-simple`), bcrypt password hashing
+- **Uploads:** Multer (stored under `public/uploads/`)
+
+## Project Structure
+
+```
+.
+├── client/                # React frontend (Vite)
+│   └── src/
+│       ├── components/    # Shared UI components (incl. shadcn/ui)
+│       ├── hooks/         # Custom React hooks (use-online-status, use-toast, …)
+│       ├── lib/           # constants, queryClient, auth/cart context, utils
+│       ├── pages/         # Route pages (public + /admin/*)
+│       ├── App.tsx
+│       └── main.tsx
+├── server/                # Express API
+│   ├── index.ts           # Entry point
+│   ├── routes.ts          # All HTTP routes
+│   ├── storage.ts         # Data access layer (IStorage interface)
+│   ├── db.ts              # Drizzle client
+│   ├── auth.ts            # Session + password helpers
+│   └── seed.ts            # Seed script (npm run db:seed)
+├── shared/
+│   └── schema.ts          # Drizzle tables + Zod insert schemas (single source of truth)
+├── public/                # Static assets served by Express (incl. /uploads)
+├── attached_assets/       # Brand/hero imagery referenced via @assets alias
+├── script/
+│   └── build.ts           # Production build (vite + esbuild → dist/)
+├── drizzle.config.ts
+├── tailwind.config.ts
+├── vite.config.ts
+└── package.json           # Single root package.json — no monorepo
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Path aliases (vite + tsconfig): `@/*` → `client/src/*`, `@shared/*` → `shared/*`, `@assets/*` → `attached_assets/*`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-## Learn More
+2. **Configure environment** — copy `.env.example` to `.env` and fill in:
+   ```
+   DATABASE_URL=postgres://user:pass@host:5432/dbname
+   SESSION_SECRET=change-me-to-a-long-random-string
+   PORT=5000
+   NODE_ENV=development
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. **Push schema & seed**
+   ```bash
+   npm run db:push     # Sync shared/schema.ts → database
+   npm run db:seed     # Populate collections, products, default admin
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. **Run dev server** (frontend + backend on the same port)
+   ```bash
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Scripts
 
-## Deploy on Vercel
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start Express + Vite in dev mode |
+| `npm run build` | Build frontend to `dist/public` and bundle server to `dist/index.cjs` |
+| `npm start` | Run production server from `dist/` |
+| `npm run check` | TypeScript type-check |
+| `npm run db:push` | Push Drizzle schema to the database |
+| `npm run db:seed` | Seed initial data (collections, products, admin) |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Default Admin
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+After seeding, sign in at `/login` with:
+- **Email:** `admin@saajbymf.com`
+- **Password:** `admin123` *(change immediately in Admin → Settings → Account)*
+
+## Database
+
+All SAAJ tables are prefixed `saaj_` (e.g. `saaj_products`, `saaj_collections`, `saaj_orders`, `saaj_users`, `saaj_settings`, `saaj_cart_items`) so the schema can safely share a database with other apps. The `banners` table is unprefixed.
+
+## Admin Panel
+
+`/admin` provides full control over:
+- Products, collections (both with multi-image galleries)
+- Hero/homepage banners
+- Orders & customers
+- Settings — branding (logo, favicon, theme color), social links, WhatsApp number, payment gateway toggles (Card, COD, Bank Transfer, JazzCash, EasyPaisa), shipping rules, page content, and admin account.
+
+## Connection Awareness
+
+The app includes an `useOnlineStatus` hook and a global `ConnectionStatus` banner that automatically detects offline state and unreachable backend, with a retry control.
+
+## Deployment
+
+Standard Node deployment:
+```bash
+npm run build
+NODE_ENV=production npm start
+```
+
+Behind nginx + PM2 with PostgreSQL on the host. Configure `DATABASE_URL` and `SESSION_SECRET` in the production environment.
+
+## License
+
+MIT
