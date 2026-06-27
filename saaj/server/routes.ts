@@ -6,26 +6,34 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { storage, pool } from "./storage";
-import { hashPassword, comparePassword, requireAuth, requireAdmin } from "./auth";
+import {
+  hashPassword,
+  comparePassword,
+  requireAuth,
+  requireAdmin,
+} from "./auth";
 import { sendToTopic, subscribeTokenToTopic } from "./firebase";
-import { sendOrderEmails, sendTestEmail, sendOrderStatusUpdateEmail } from "./email";
-import { registerSchema, loginSchema, insertProductSchema, insertCollectionSchema, insertBannerSchema } from "@shared/schema";
+import {
+  sendOrderEmails,
+  sendTestEmail,
+  sendOrderStatusUpdateEmail,
+} from "./email";
+import {
+  registerSchema,
+  loginSchema,
+  insertProductSchema,
+  insertCollectionSchema,
+  insertBannerSchema,
+} from "@shared/schema";
 import { z } from "zod";
+import { createClient } from "@supabase/supabase-js";
 
-const uploadsDir = path.join(process.cwd(), "public", "uploads");
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
+const supabaseUrl = process.env.SUPABASE_URL!;
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY!;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: (_req, _file, cb) => cb(null, uploadsDir),
-    filename: (_req, file, cb) => {
-      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-      const ext = path.extname(file.originalname);
-      cb(null, uniqueSuffix + ext);
-    },
-  }),
+  storage: multer.memoryStorage(), // Keep file in memory temporarily
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
     const allowed = /\.(jpg|jpeg|png|gif|webp|ico|svg)$/i;
@@ -37,9 +45,32 @@ const upload = multer({
   },
 });
 
+// Helper function to upload to Supabase
+async function uploadToSupabase(file: Express.Multer.File) {
+  const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+  const ext = path.extname(file.originalname);
+  const filename = `${uniqueSuffix}${ext}`;
+
+  const { data, error } = await supabase.storage
+    .from("saaj-uploads")
+    .upload(filename, file.buffer, {
+      contentType: file.mimetype,
+      cacheControl: "3600",
+      upsert: false,
+    });
+
+  if (error) throw error;
+
+  // Return the public URL
+  const { data: publicUrlData } = supabase.storage
+    .from("saaj-uploads")
+    .getPublicUrl(filename);
+
+  return { url: publicUrlData.publicUrl, filename };
+}
 export async function registerRoutes(
   httpServer: Server,
-  app: Express
+  app: Express,
 ): Promise<Server> {
   const sessionSecret = process.env.SESSION_SECRET;
   if (!sessionSecret) {
@@ -52,7 +83,8 @@ export async function registerRoutes(
       store: new PgStore({
         pool: pool as any,
         createTableIfMissing: true,
-        errorLog: (msg: string, err?: Error) => console.error("[session store]", msg, err ?? ""),
+        errorLog: (msg: string, err?: Error) =>
+          console.error("[session store]", msg, err ?? ""),
       }),
       secret: sessionSecret,
       resave: false,
@@ -65,19 +97,23 @@ export async function registerRoutes(
         secure: "auto",
         sameSite: isProduction ? "strict" : "lax",
       },
-    })
+    }),
   );
 
   app.post("/api/auth/register", async (req, res) => {
     try {
       const parsed = registerSchema.safeParse(req.body);
       if (!parsed.success) {
-        return res.status(400).json({ message: "Invalid input", errors: parsed.error.flatten() });
+        return res
+          .status(400)
+          .json({ message: "Invalid input", errors: parsed.error.flatten() });
       }
       const { email, password, firstName, lastName, phone } = parsed.data;
       const existing = await storage.getUserByEmail(email);
       if (existing) {
-        return res.status(409).json({ message: "An account with this email already exists" });
+        return res
+          .status(409)
+          .json({ message: "An account with this email already exists" });
       }
       const hashedPassword = await hashPassword(password);
       const user = await storage.createUser({
@@ -168,7 +204,10 @@ export async function registerRoutes(
       if (!parsed.success) {
         return res.status(400).json({ message: "Invalid profile data" });
       }
-      const updated = await storage.updateUser(req.session.userId!, parsed.data);
+      const updated = await storage.updateUser(
+        req.session.userId!,
+        parsed.data,
+      );
       if (!updated) return res.status(404).json({ message: "User not found" });
       const { password: _, ...safeUser } = updated;
       res.json(safeUser);
@@ -180,7 +219,10 @@ export async function registerRoutes(
   app.get("/api/collections", async (_req, res) => {
     try {
       const cols = await storage.getCollections();
-      res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
+      res.set(
+        "Cache-Control",
+        "public, max-age=60, stale-while-revalidate=300",
+      );
       res.json(cols);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch collections" });
@@ -190,8 +232,12 @@ export async function registerRoutes(
   app.get("/api/collections/:slug", async (req, res) => {
     try {
       const collection = await storage.getCollectionBySlug(req.params.slug);
-      if (!collection) return res.status(404).json({ message: "Collection not found" });
-      res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
+      if (!collection)
+        return res.status(404).json({ message: "Collection not found" });
+      res.set(
+        "Cache-Control",
+        "public, max-age=60, stale-while-revalidate=300",
+      );
       res.json(collection);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch collection" });
@@ -200,7 +246,10 @@ export async function registerRoutes(
 
   app.get("/api/products", async (req, res) => {
     try {
-      res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
+      res.set(
+        "Cache-Control",
+        "public, max-age=60, stale-while-revalidate=300",
+      );
       const { featured, collection } = req.query;
       if (featured === "true") {
         return res.json(await storage.getFeaturedProducts());
@@ -217,8 +266,12 @@ export async function registerRoutes(
   app.get("/api/products/:slug", async (req, res) => {
     try {
       const product = await storage.getProductBySlug(req.params.slug);
-      if (!product) return res.status(404).json({ message: "Product not found" });
-      res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
+      if (!product)
+        return res.status(404).json({ message: "Product not found" });
+      res.set(
+        "Cache-Control",
+        "public, max-age=60, stale-while-revalidate=300",
+      );
       res.json(product);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch product" });
@@ -229,7 +282,12 @@ export async function registerRoutes(
     try {
       const parsed = insertProductSchema.safeParse(req.body);
       if (!parsed.success) {
-        return res.status(400).json({ message: "Invalid product data", errors: parsed.error.flatten() });
+        return res
+          .status(400)
+          .json({
+            message: "Invalid product data",
+            errors: parsed.error.flatten(),
+          });
       }
       const product = await storage.createProduct(parsed.data);
       res.status(201).json(product);
@@ -242,10 +300,16 @@ export async function registerRoutes(
     try {
       const parsed = insertProductSchema.partial().safeParse(req.body);
       if (!parsed.success) {
-        return res.status(400).json({ message: "Invalid product data", errors: parsed.error.flatten() });
+        return res
+          .status(400)
+          .json({
+            message: "Invalid product data",
+            errors: parsed.error.flatten(),
+          });
       }
       const updated = await storage.updateProduct(req.params.id, parsed.data);
-      if (!updated) return res.status(404).json({ message: "Product not found" });
+      if (!updated)
+        return res.status(404).json({ message: "Product not found" });
       res.json(updated);
     } catch (error) {
       res.status(500).json({ message: "Failed to update product" });
@@ -255,7 +319,8 @@ export async function registerRoutes(
   app.delete("/api/admin/products/:id", requireAdmin, async (req, res) => {
     try {
       const deleted = await storage.deleteProduct(req.params.id);
-      if (!deleted) return res.status(404).json({ message: "Product not found" });
+      if (!deleted)
+        return res.status(404).json({ message: "Product not found" });
       res.json({ message: "Product deleted" });
     } catch (error) {
       res.status(500).json({ message: "Failed to delete product" });
@@ -266,7 +331,12 @@ export async function registerRoutes(
     try {
       const parsed = insertCollectionSchema.safeParse(req.body);
       if (!parsed.success) {
-        return res.status(400).json({ message: "Invalid collection data", errors: parsed.error.flatten() });
+        return res
+          .status(400)
+          .json({
+            message: "Invalid collection data",
+            errors: parsed.error.flatten(),
+          });
       }
       const collection = await storage.createCollection(parsed.data);
       res.status(201).json(collection);
@@ -279,10 +349,19 @@ export async function registerRoutes(
     try {
       const parsed = insertCollectionSchema.partial().safeParse(req.body);
       if (!parsed.success) {
-        return res.status(400).json({ message: "Invalid collection data", errors: parsed.error.flatten() });
+        return res
+          .status(400)
+          .json({
+            message: "Invalid collection data",
+            errors: parsed.error.flatten(),
+          });
       }
-      const updated = await storage.updateCollection(req.params.id, parsed.data);
-      if (!updated) return res.status(404).json({ message: "Collection not found" });
+      const updated = await storage.updateCollection(
+        req.params.id,
+        parsed.data,
+      );
+      if (!updated)
+        return res.status(404).json({ message: "Collection not found" });
       res.json(updated);
     } catch (error) {
       res.status(500).json({ message: "Failed to update collection" });
@@ -292,7 +371,8 @@ export async function registerRoutes(
   app.delete("/api/admin/collections/:id", requireAdmin, async (req, res) => {
     try {
       const deleted = await storage.deleteCollection(req.params.id);
-      if (!deleted) return res.status(404).json({ message: "Collection not found" });
+      if (!deleted)
+        return res.status(404).json({ message: "Collection not found" });
       res.json({ message: "Collection deleted" });
     } catch (error) {
       res.status(500).json({ message: "Failed to delete collection" });
@@ -325,8 +405,17 @@ export async function registerRoutes(
       const updated = await storage.updateOrder(req.params.id, req.body);
       if (!updated) return res.status(404).json({ message: "Order not found" });
       // Send status update email if status changed to a notable value
-      const notifyStatuses = ["processing", "shipped", "delivered", "cancelled"];
-      if (prev && updated.status !== prev.status && notifyStatuses.includes(updated.status)) {
+      const notifyStatuses = [
+        "processing",
+        "shipped",
+        "delivered",
+        "cancelled",
+      ];
+      if (
+        prev &&
+        updated.status !== prev.status &&
+        notifyStatuses.includes(updated.status)
+      ) {
         const items = await storage.getOrderItems(updated.id);
         void sendOrderStatusUpdateEmail(updated, items);
       }
@@ -359,7 +448,9 @@ export async function registerRoutes(
   app.delete("/api/admin/users/:id", requireAdmin, async (req, res) => {
     try {
       if (req.params.id === req.session.userId) {
-        return res.status(400).json({ message: "You cannot delete your own admin account" });
+        return res
+          .status(400)
+          .json({ message: "You cannot delete your own admin account" });
       }
       const ok = await storage.deleteUser(req.params.id);
       if (!ok) return res.status(404).json({ message: "User not found" });
@@ -373,22 +464,45 @@ export async function registerRoutes(
     try {
       const settings = await storage.getSiteSettings();
       const publicKeys = [
-        "site_name", "site_tagline", "site_logo", "site_announcement", "site_currency",
-        "site_favicon", "site_theme_color",
-        "social_instagram", "social_facebook", "social_pinterest",
-        "social_tiktok", "social_youtube",
-        "page_privacy_policy", "page_shipping_returns", "page_size_guide",
-        "page_about", "page_contact",
-        "cod_enabled", "bank_transfer_enabled", "jazzcash_enabled", "easypaisa_enabled", "payoneer_enabled",
-        "firebase_api_key", "firebase_auth_domain", "firebase_project_id",
-        "firebase_messaging_sender_id", "firebase_app_id", "firebase_vapid_key",
-        "site_phone", "site_whatsapp",
+        "site_name",
+        "site_tagline",
+        "site_logo",
+        "site_announcement",
+        "site_currency",
+        "site_favicon",
+        "site_theme_color",
+        "social_instagram",
+        "social_facebook",
+        "social_pinterest",
+        "social_tiktok",
+        "social_youtube",
+        "page_privacy_policy",
+        "page_shipping_returns",
+        "page_size_guide",
+        "page_about",
+        "page_contact",
+        "cod_enabled",
+        "bank_transfer_enabled",
+        "jazzcash_enabled",
+        "easypaisa_enabled",
+        "payoneer_enabled",
+        "firebase_api_key",
+        "firebase_auth_domain",
+        "firebase_project_id",
+        "firebase_messaging_sender_id",
+        "firebase_app_id",
+        "firebase_vapid_key",
+        "site_phone",
+        "site_whatsapp",
       ];
       const publicSettings: Record<string, string> = {};
-      settings.forEach(s => {
+      settings.forEach((s) => {
         if (publicKeys.includes(s.key)) publicSettings[s.key] = s.value || "";
       });
-      res.set("Cache-Control", "public, max-age=120, stale-while-revalidate=600");
+      res.set(
+        "Cache-Control",
+        "public, max-age=120, stale-while-revalidate=600",
+      );
       res.json(publicSettings);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch settings" });
@@ -429,7 +543,7 @@ export async function registerRoutes(
       const allUsers = await storage.getAllUsers();
       const allCollections = await storage.getCollections();
       const totalRevenue = allOrders
-        .filter(o => o.paymentStatus === "paid")
+        .filter((o) => o.paymentStatus === "paid")
         .reduce((sum, o) => sum + o.total, 0);
       res.json({
         totalProducts: allProducts.length,
@@ -446,33 +560,71 @@ export async function registerRoutes(
 
   app.post("/api/orders", async (req, res) => {
     try {
-      const { items, shippingEmail, shippingFirstName, shippingLastName, shippingAddress, shippingCity, shippingState, shippingZip, shippingCountry, shippingPhone, paymentMethod, paymentScreenshot, orderNotes } = req.body;
+      const {
+        items,
+        shippingEmail,
+        shippingFirstName,
+        shippingLastName,
+        shippingAddress,
+        shippingCity,
+        shippingState,
+        shippingZip,
+        shippingCountry,
+        shippingPhone,
+        paymentMethod,
+        paymentScreenshot,
+        orderNotes,
+      } = req.body;
       if (!items || !Array.isArray(items) || items.length === 0) {
         return res.status(400).json({ message: "Order must have items" });
       }
-      if (!shippingEmail || !shippingFirstName || !shippingLastName || !shippingAddress || !shippingCity || !shippingCountry || !shippingPhone) {
-        return res.status(400).json({ message: "All shipping details are required" });
+      if (
+        !shippingEmail ||
+        !shippingFirstName ||
+        !shippingLastName ||
+        !shippingAddress ||
+        !shippingCity ||
+        !shippingCountry ||
+        !shippingPhone
+      ) {
+        return res
+          .status(400)
+          .json({ message: "All shipping details are required" });
       }
       const method = paymentMethod || "cod";
       const validMethods = ["cod", "card", "jazzcash", "payoneer", "bank"];
       if (!validMethods.includes(method)) {
-        return res.status(400).json({ message: `Invalid payment method. Use one of: ${validMethods.join(", ")}` });
+        return res
+          .status(400)
+          .json({
+            message: `Invalid payment method. Use one of: ${validMethods.join(", ")}`,
+          });
       }
       if (method === "bank" && !paymentScreenshot) {
-        return res.status(400).json({ message: "Please upload the payment screenshot for bank transfer." });
+        return res
+          .status(400)
+          .json({
+            message: "Please upload the payment screenshot for bank transfer.",
+          });
       }
       let total = 0;
       for (const item of items) {
         const product = await storage.getProductById(item.productId);
         if (!product) {
-          return res.status(400).json({ message: `Product not found: ${item.productId}` });
+          return res
+            .status(400)
+            .json({ message: `Product not found: ${item.productId}` });
         }
         total += product.price * (item.quantity || 1);
       }
       let paymentStatus = "pending";
       if (method === "card") {
         paymentStatus = "paid";
-      } else if (method === "jazzcash" || method === "payoneer" || method === "bank") {
+      } else if (
+        method === "jazzcash" ||
+        method === "payoneer" ||
+        method === "bank"
+      ) {
         paymentStatus = "awaiting_verification";
       }
       const order = await storage.createOrder({
@@ -519,10 +671,14 @@ export async function registerRoutes(
 
   app.get("/api/orders/track", async (req, res) => {
     try {
-      const email = (req.query.email as string || "").trim().toLowerCase();
-      const number = (req.query.number as string || "").trim().replace(/^#/, "");
+      const email = ((req.query.email as string) || "").trim().toLowerCase();
+      const number = ((req.query.number as string) || "")
+        .trim()
+        .replace(/^#/, "");
       if (!email || !number) {
-        return res.status(400).json({ message: "email and number are required" });
+        return res
+          .status(400)
+          .json({ message: "email and number are required" });
       }
       function shortOrderNumber(id: string): string {
         const hex = id.replace(/[^0-9a-f]/gi, "").slice(-6) || "0";
@@ -573,7 +729,10 @@ export async function registerRoutes(
       if (!token || typeof token !== "string") {
         return res.status(400).json({ message: "token is required" });
       }
-      const t = (topic && typeof topic === "string" ? topic : "all").slice(0, 200);
+      const t = (topic && typeof topic === "string" ? topic : "all").slice(
+        0,
+        200,
+      );
       await subscribeTokenToTopic(token, t);
       res.json({ ok: true, topic: t });
     } catch (err: any) {
@@ -584,56 +743,89 @@ export async function registerRoutes(
   app.post("/api/admin/push/send", requireAdmin, async (req, res) => {
     try {
       const { topic, title, body, link, image } = req.body as {
-        topic?: string; title?: string; body?: string; link?: string; image?: string;
+        topic?: string;
+        title?: string;
+        body?: string;
+        link?: string;
+        image?: string;
       };
       if (!topic || !title || !body) {
-        return res.status(400).json({ message: "topic, title and body are required" });
+        return res
+          .status(400)
+          .json({ message: "topic, title and body are required" });
       }
       const messageId = await sendToTopic({ topic, title, body, link, image });
       res.json({ ok: true, messageId });
     } catch (err: any) {
-      res.status(500).json({ message: err?.message || "Failed to send notification" });
+      res
+        .status(500)
+        .json({ message: err?.message || "Failed to send notification" });
     }
   });
 
   app.post("/api/admin/test-email", requireAdmin, async (req, res) => {
     try {
       const to = (req.body?.to || "").toString().trim();
-      if (!to) return res.status(400).json({ message: "Recipient email is required" });
+      if (!to)
+        return res.status(400).json({ message: "Recipient email is required" });
       await sendTestEmail(to);
       res.json({ ok: true });
     } catch (err: any) {
-      res.status(500).json({ message: err?.message || "Failed to send test email" });
+      res
+        .status(500)
+        .json({ message: err?.message || "Failed to send test email" });
     }
   });
 
-  app.post("/api/upload/payment-screenshot", upload.single("file"), (req, res) => {
-    if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded" });
-    }
-    const url = `/uploads/${req.file.filename}`;
-    res.json({ url, filename: req.file.filename });
-  });
+  app.post(
+    "/api/upload/payment-screenshot",
+    upload.single("file"),
+    async (req, res) => {
+      if (!req.file)
+        return res.status(400).json({ message: "No file uploaded" });
+      try {
+        const result = await uploadToSupabase(req.file);
+        res.json(result);
+      } catch (e) {
+        res.status(500).json({ message: "Upload failed" });
+      }
+    },
+  );
 
-  app.post("/api/upload", requireAdmin, upload.single("file"), (req, res) => {
-    if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded" });
-    }
-    const url = `/uploads/${req.file.filename}`;
-    res.json({ url, filename: req.file.filename });
-  });
+  app.post(
+    "/api/upload",
+    requireAdmin,
+    upload.single("file"),
+    async (req, res) => {
+      if (!req.file)
+        return res.status(400).json({ message: "No file uploaded" });
+      try {
+        const result = await uploadToSupabase(req.file);
+        res.json(result);
+      } catch (e) {
+        res.status(500).json({ message: "Upload failed" });
+      }
+    },
+  );
 
-  app.post("/api/upload/multiple", requireAdmin, upload.array("files", 10), (req, res) => {
-    const files = req.files as Express.Multer.File[];
-    if (!files || files.length === 0) {
-      return res.status(400).json({ message: "No files uploaded" });
-    }
-    const urls = files.map(f => `/uploads/${f.filename}`);
-    res.json({ urls });
-  });
+  app.post(
+    "/api/upload/multiple",
+    requireAdmin,
+    upload.array("files", 10),
+    async (req, res) => {
+      const files = req.files as Express.Multer.File[];
+      if (!files || files.length === 0)
+        return res.status(400).json({ message: "No files uploaded" });
 
-  const express = await import("express");
-  app.use("/uploads", express.default.static(uploadsDir));
+      try {
+        const uploadPromises = files.map((f) => uploadToSupabase(f));
+        const results = await Promise.all(uploadPromises);
+        res.json({ urls: results.map((r) => r.url) });
+      } catch (e) {
+        res.status(500).json({ message: "Upload failed" });
+      }
+    },
+  );
 
   const changePasswordSchema = z.object({
     currentPassword: z.string().min(1),
@@ -644,15 +836,22 @@ export async function registerRoutes(
     try {
       const parsed = changePasswordSchema.safeParse(req.body);
       if (!parsed.success) {
-        return res.status(400).json({ message: "New password must be at least 6 characters" });
+        return res
+          .status(400)
+          .json({ message: "New password must be at least 6 characters" });
       }
       const user = await storage.getUserById(req.session.userId!);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      const valid = await comparePassword(parsed.data.currentPassword, user.password);
+      const valid = await comparePassword(
+        parsed.data.currentPassword,
+        user.password,
+      );
       if (!valid) {
-        return res.status(401).json({ message: "Current password is incorrect" });
+        return res
+          .status(401)
+          .json({ message: "Current password is incorrect" });
       }
       const hashedPassword = await hashPassword(parsed.data.newPassword);
       await storage.updateUser(user.id, { password: hashedPassword });
@@ -665,7 +864,10 @@ export async function registerRoutes(
   app.get("/api/banners", async (_req, res) => {
     try {
       const activeBanners = await storage.getBanners(true);
-      res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
+      res.set(
+        "Cache-Control",
+        "public, max-age=60, stale-while-revalidate=300",
+      );
       res.json(activeBanners);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch banners" });
@@ -685,7 +887,12 @@ export async function registerRoutes(
     try {
       const parsed = insertBannerSchema.safeParse(req.body);
       if (!parsed.success) {
-        return res.status(400).json({ message: "Invalid banner data", errors: parsed.error.flatten() });
+        return res
+          .status(400)
+          .json({
+            message: "Invalid banner data",
+            errors: parsed.error.flatten(),
+          });
       }
       const banner = await storage.createBanner(parsed.data);
       res.status(201).json(banner);
@@ -701,7 +908,8 @@ export async function registerRoutes(
         return res.status(400).json({ message: "Invalid banner data" });
       }
       const updated = await storage.updateBanner(req.params.id, parsed.data);
-      if (!updated) return res.status(404).json({ message: "Banner not found" });
+      if (!updated)
+        return res.status(404).json({ message: "Banner not found" });
       res.json(updated);
     } catch (error) {
       res.status(500).json({ message: "Failed to update banner" });
@@ -711,7 +919,8 @@ export async function registerRoutes(
   app.delete("/api/admin/banners/:id", requireAdmin, async (req, res) => {
     try {
       const deleted = await storage.deleteBanner(req.params.id);
-      if (!deleted) return res.status(404).json({ message: "Banner not found" });
+      if (!deleted)
+        return res.status(404).json({ message: "Banner not found" });
       res.json({ message: "Banner deleted" });
     } catch (error) {
       res.status(500).json({ message: "Failed to delete banner" });
@@ -721,23 +930,25 @@ export async function registerRoutes(
   const SITE_ORIGIN = process.env.SITE_ORIGIN || "https://saajbymf.mtai.live";
 
   app.get("/robots.txt", (_req, res) => {
-    res.type("text/plain").send(
-      [
-        "User-agent: *",
-        "Allow: /",
-        "Disallow: /admin",
-        "Disallow: /admin/",
-        "Disallow: /api/",
-        "Disallow: /checkout",
-        "Disallow: /cart",
-        "Disallow: /account",
-        "Disallow: /login",
-        "Disallow: /register",
-        "",
-        `Sitemap: ${SITE_ORIGIN}/sitemap.xml`,
-        "",
-      ].join("\n"),
-    );
+    res
+      .type("text/plain")
+      .send(
+        [
+          "User-agent: *",
+          "Allow: /",
+          "Disallow: /admin",
+          "Disallow: /admin/",
+          "Disallow: /api/",
+          "Disallow: /checkout",
+          "Disallow: /cart",
+          "Disallow: /account",
+          "Disallow: /login",
+          "Disallow: /register",
+          "",
+          `Sitemap: ${SITE_ORIGIN}/sitemap.xml`,
+          "",
+        ].join("\n"),
+      );
   });
 
   app.get("/sitemap.xml", async (_req, res) => {
@@ -746,11 +957,29 @@ export async function registerRoutes(
         storage.getProducts().catch(() => []),
         storage.getCollections().catch(() => []),
       ]);
-      const staticPaths = ["/", "/shop", "/collections", "/about", "/contact", "/size-guide", "/shipping-returns", "/privacy-policy"];
+      const staticPaths = [
+        "/",
+        "/shop",
+        "/collections",
+        "/about",
+        "/contact",
+        "/size-guide",
+        "/shipping-returns",
+        "/privacy-policy",
+      ];
       const urls: { loc: string; priority: string }[] = [
-        ...staticPaths.map((p) => ({ loc: `${SITE_ORIGIN}${p}`, priority: p === "/" ? "1.0" : "0.7" })),
-        ...(collections as any[]).map((c) => ({ loc: `${SITE_ORIGIN}/collections/${c.slug}`, priority: "0.8" })),
-        ...(products as any[]).map((p) => ({ loc: `${SITE_ORIGIN}/product/${p.slug}`, priority: "0.9" })),
+        ...staticPaths.map((p) => ({
+          loc: `${SITE_ORIGIN}${p}`,
+          priority: p === "/" ? "1.0" : "0.7",
+        })),
+        ...(collections as any[]).map((c) => ({
+          loc: `${SITE_ORIGIN}/collections/${c.slug}`,
+          priority: "0.8",
+        })),
+        ...(products as any[]).map((p) => ({
+          loc: `${SITE_ORIGIN}/product/${p.slug}`,
+          priority: "0.9",
+        })),
       ];
       const xml =
         `<?xml version="1.0" encoding="UTF-8"?>\n` +
