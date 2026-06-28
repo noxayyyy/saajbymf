@@ -1,4 +1,5 @@
 import admin from "firebase-admin";
+import { getMessaging, type Message } from "firebase-admin/messaging";
 import { storage } from "./storage";
 
 let cachedApp: admin.app.App | null = null;
@@ -39,7 +40,7 @@ export async function getFirebaseAdmin(): Promise<admin.app.App | null> {
     {
       credential: admin.credential.cert(parsed),
     },
-    `saaj-fcm-${Date.now()}`
+    `saaj-fcm-${Date.now()}`,
   );
   cachedKey = json;
   return cachedApp;
@@ -59,7 +60,7 @@ export async function sendToTopic(payload: PushPayload) {
 
   const topic = payload.topic.replace(/[^a-zA-Z0-9-_.~%]/g, "_");
 
-  const message: admin.messaging.Message = {
+  const message: Message = {
     topic,
     notification: {
       title: payload.title,
@@ -78,19 +79,19 @@ export async function sendToTopic(payload: PushPayload) {
     data: payload.link ? { link: payload.link } : undefined,
   };
 
-  return app.messaging().send(message);
+  return getMessaging(app).send(message);
 }
 
 export async function subscribeTokenToTopic(token: string, topic: string) {
   const app = await getFirebaseAdmin();
   if (!app) throw new Error("Firebase service account is not configured");
   const safeTopic = topic.replace(/[^a-zA-Z0-9-_.~%]/g, "_");
-  return app.messaging().subscribeToTopic([token], safeTopic);
+  return getMessaging(app).subscribeToTopic([token], safeTopic);
 }
 
 export async function unsubscribeTokenFromTopic(token: string, topic: string) {
   const app = await getFirebaseAdmin();
   if (!app) throw new Error("Firebase service account is not configured");
   const safeTopic = topic.replace(/[^a-zA-Z0-9-_.~%]/g, "_");
-  return app.messaging().unsubscribeFromTopic([token], safeTopic);
+  return getMessaging(app).unsubscribeFromTopic([token], safeTopic);
 }

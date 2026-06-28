@@ -30,7 +30,8 @@ async function loadConfig(): Promise<SmtpConfig | null> {
     user,
     pass,
     from: map.smtp_from?.trim() || user,
-    adminEmail: map.admin_notify_email?.trim() || map.site_email?.trim() || user,
+    adminEmail:
+      map.admin_notify_email?.trim() || map.site_email?.trim() || user,
     storeName: map.site_name?.trim() || "SAAJ by MF",
     publicUrl: map.site_public_url?.trim() || "",
   };
@@ -71,7 +72,7 @@ function itemsTable(items: OrderItem[], currency: string) {
         <td style="padding:12px;border-bottom:1px solid #eee;font:14px/1.4 Arial,sans-serif;color:#222;text-align:right;white-space:nowrap;">
           ${fmtPrice(i.price * i.quantity, currency)}
         </td>
-      </tr>`
+      </tr>`,
     )
     .join("");
   return `
@@ -81,7 +82,9 @@ function itemsTable(items: OrderItem[], currency: string) {
 }
 
 function customerHtml(order: Order, items: OrderItem[], cfg: SmtpConfig) {
-  const link = cfg.publicUrl ? `${cfg.publicUrl.replace(/\/$/, "")}/order/${order.id}` : "";
+  const link = cfg.publicUrl
+    ? `${cfg.publicUrl.replace(/\/$/, "")}/order/${order.id}`
+    : "";
   return `
   <div style="background:#f7f7f7;padding:24px;">
     <div style="max-width:600px;margin:0 auto;background:#ffffff;padding:32px;font-family:Georgia,serif;color:#1a1a1a;">
@@ -113,7 +116,9 @@ function customerHtml(order: Order, items: OrderItem[], cfg: SmtpConfig) {
 }
 
 function adminHtml(order: Order, items: OrderItem[], cfg: SmtpConfig) {
-  const link = cfg.publicUrl ? `${cfg.publicUrl.replace(/\/$/, "")}/admin/orders` : "";
+  const link = cfg.publicUrl
+    ? `${cfg.publicUrl.replace(/\/$/, "")}/admin/orders`
+    : "";
   return `
   <div style="background:#f7f7f7;padding:24px;">
     <div style="max-width:600px;margin:0 auto;background:#ffffff;padding:32px;font-family:Arial,sans-serif;color:#1a1a1a;">
@@ -152,10 +157,13 @@ function statusUpdateHtml(order: Order, items: OrderItem[], cfg: SmtpConfig) {
     ? `${cfg.publicUrl.replace(/\/$/, "")}/track-order`
     : "";
   const statusColor =
-    order.status === "delivered" ? "#22c55e"
-    : order.status === "shipped" ? "#3b82f6"
-    : order.status === "cancelled" ? "#ef4444"
-    : "#c4972a";
+    order.status === "delivered"
+      ? "#22c55e"
+      : order.status === "shipped"
+        ? "#3b82f6"
+        : order.status === "cancelled"
+          ? "#ef4444"
+          : "#c4972a";
 
   return `
   <div style="background:#f7f7f7;padding:24px;">
@@ -192,7 +200,10 @@ function statusUpdateHtml(order: Order, items: OrderItem[], cfg: SmtpConfig) {
   </div>`;
 }
 
-export async function sendOrderStatusUpdateEmail(order: Order, items: OrderItem[]) {
+export async function sendOrderStatusUpdateEmail(
+  order: Order,
+  items: OrderItem[],
+) {
   try {
     const cfg = await loadConfig();
     if (!cfg) return;
@@ -201,12 +212,15 @@ export async function sendOrderStatusUpdateEmail(order: Order, items: OrderItem[
     const statusLabel = STATUS_LABELS[order.status] || order.status;
     await transporter.sendMail({
       from: cfg.from,
-      to: order.shippingEmail,
+      to: order.shippingEmail || "",
       subject: `Your Order #${num} is ${statusLabel} — ${cfg.storeName}`,
       html: statusUpdateHtml(order, items, cfg),
     });
   } catch (err: any) {
-    console.error("[email] Failed to send status update email:", err?.message || err);
+    console.error(
+      "[email] Failed to send status update email:",
+      err?.message || err,
+    );
   }
 }
 
@@ -222,7 +236,7 @@ export async function sendOrderEmails(order: Order, items: OrderItem[]) {
     await Promise.allSettled([
       transporter.sendMail({
         from: cfg.from,
-        to: order.shippingEmail,
+        to: order.shippingEmail || "",
         subject: `Order Confirmation #${num} — ${cfg.storeName}`,
         html: customerHtml(order, items, cfg),
       }),
@@ -240,7 +254,8 @@ export async function sendOrderEmails(order: Order, items: OrderItem[]) {
 
 export async function sendTestEmail(to: string) {
   const cfg = await loadConfig();
-  if (!cfg) throw new Error("SMTP is not configured. Save SMTP settings first.");
+  if (!cfg)
+    throw new Error("SMTP is not configured. Save SMTP settings first.");
   const transporter = buildTransport(cfg);
   await transporter.verify();
   await transporter.sendMail({
