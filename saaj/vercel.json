@@ -1,10 +1,15 @@
 {
   "buildCommand": "npm run db:push && npm run db:seed && npm run build",
   "outputDirectory": "dist/public",
+  "functions": {
+    "api/index.cjs": {
+      "includeFiles": "dist/**"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api"
+      "destination": "/api/index.cjs"
     },
     {
       "source": "/(.*)",
