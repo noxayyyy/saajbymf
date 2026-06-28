@@ -1,8 +1,8 @@
-import admin from "firebase-admin";
+import { initializeApp, cert, deleteApp, type App } from "firebase-admin/app";
 import { getMessaging, type Message } from "firebase-admin/messaging";
 import { storage } from "./storage";
 
-let cachedApp: admin.app.App | null = null;
+let cachedApp: App | null = null;
 let cachedKey: string | null = null;
 
 async function getServiceAccountJson(): Promise<string | null> {
@@ -11,11 +11,11 @@ async function getServiceAccountJson(): Promise<string | null> {
   return sa?.value?.trim() || null;
 }
 
-export async function getFirebaseAdmin(): Promise<admin.app.App | null> {
+export async function getFirebaseAdmin(): Promise<App | null> {
   const json = await getServiceAccountJson();
   if (!json) {
     if (cachedApp) {
-      await cachedApp.delete().catch(() => {});
+      await deleteApp(cachedApp).catch(() => {});
       cachedApp = null;
       cachedKey = null;
     }
@@ -25,22 +25,22 @@ export async function getFirebaseAdmin(): Promise<admin.app.App | null> {
   if (cachedApp && cachedKey === json) return cachedApp;
 
   if (cachedApp) {
-    await cachedApp.delete().catch(() => {});
+    await deleteApp(cachedApp).catch(() => {});
     cachedApp = null;
   }
 
-  let parsed: admin.ServiceAccount;
+  let parsed: any;
   try {
     parsed = JSON.parse(json);
   } catch {
     throw new Error("Service account JSON is invalid");
   }
 
-  cachedApp = admin.initializeApp(
+  cachedApp = initializeApp(
     {
-      credential: admin.credential.cert(parsed),
+      credential: cert(parsed),
     },
-    `saaj-fcm-${Date.now()}`,
+    `saaj-fcm-${Date.now()}`
   );
   cachedKey = json;
   return cachedApp;
@@ -72,7 +72,6 @@ export async function sendToTopic(payload: PushPayload) {
         title: payload.title,
         body: payload.body,
         icon: payload.image || undefined,
-        badge: undefined,
       },
       fcmOptions: payload.link ? { link: payload.link } : undefined,
     },

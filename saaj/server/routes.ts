@@ -231,7 +231,7 @@ export async function registerRoutes(
 
   app.get("/api/collections/:slug", async (req, res) => {
     try {
-      const collection = await storage.getCollectionBySlug(req.params.slug);
+      const collection = await storage.getCollectionBySlug((req.params.slug as string));
       if (!collection)
         return res.status(404).json({ message: "Collection not found" });
       res.set(
@@ -265,7 +265,7 @@ export async function registerRoutes(
 
   app.get("/api/products/:slug", async (req, res) => {
     try {
-      const product = await storage.getProductBySlug(req.params.slug);
+      const product = await storage.getProductBySlug((req.params.slug as string));
       if (!product)
         return res.status(404).json({ message: "Product not found" });
       res.set(
@@ -307,7 +307,7 @@ export async function registerRoutes(
             errors: parsed.error.flatten(),
           });
       }
-      const updated = await storage.updateProduct(req.params.id, parsed.data);
+      const updated = await storage.updateProduct((req.params.id as string), parsed.data);
       if (!updated)
         return res.status(404).json({ message: "Product not found" });
       res.json(updated);
@@ -318,7 +318,7 @@ export async function registerRoutes(
 
   app.delete("/api/admin/products/:id", requireAdmin, async (req, res) => {
     try {
-      const deleted = await storage.deleteProduct(req.params.id);
+      const deleted = await storage.deleteProduct((req.params.id as string));
       if (!deleted)
         return res.status(404).json({ message: "Product not found" });
       res.json({ message: "Product deleted" });
@@ -357,7 +357,7 @@ export async function registerRoutes(
           });
       }
       const updated = await storage.updateCollection(
-        req.params.id,
+        (req.params.id as string),
         parsed.data,
       );
       if (!updated)
@@ -370,7 +370,7 @@ export async function registerRoutes(
 
   app.delete("/api/admin/collections/:id", requireAdmin, async (req, res) => {
     try {
-      const deleted = await storage.deleteCollection(req.params.id);
+      const deleted = await storage.deleteCollection((req.params.id as string));
       if (!deleted)
         return res.status(404).json({ message: "Collection not found" });
       res.json({ message: "Collection deleted" });
@@ -390,7 +390,7 @@ export async function registerRoutes(
 
   app.get("/api/admin/orders/:id", requireAdmin, async (req, res) => {
     try {
-      const order = await storage.getOrderById(req.params.id);
+      const order = await storage.getOrderById((req.params.id as string));
       if (!order) return res.status(404).json({ message: "Order not found" });
       const items = await storage.getOrderItems(order.id);
       res.json({ ...order, items });
@@ -401,8 +401,8 @@ export async function registerRoutes(
 
   app.put("/api/admin/orders/:id", requireAdmin, async (req, res) => {
     try {
-      const prev = await storage.getOrderById(req.params.id);
-      const updated = await storage.updateOrder(req.params.id, req.body);
+      const prev = await storage.getOrderById((req.params.id as string));
+      const updated = await storage.updateOrder((req.params.id as string), req.body);
       if (!updated) return res.status(404).json({ message: "Order not found" });
       // Send status update email if status changed to a notable value
       const notifyStatuses = [
@@ -427,7 +427,7 @@ export async function registerRoutes(
 
   app.delete("/api/admin/orders/:id", requireAdmin, async (req, res) => {
     try {
-      const ok = await storage.deleteOrder(req.params.id);
+      const ok = await storage.deleteOrder((req.params.id as string));
       if (!ok) return res.status(404).json({ message: "Order not found" });
       res.json({ ok: true });
     } catch (error) {
@@ -447,12 +447,12 @@ export async function registerRoutes(
 
   app.delete("/api/admin/users/:id", requireAdmin, async (req, res) => {
     try {
-      if (req.params.id === req.session.userId) {
+      if ((req.params.id as string) === req.session.userId) {
         return res
           .status(400)
           .json({ message: "You cannot delete your own admin account" });
       }
-      const ok = await storage.deleteUser(req.params.id);
+      const ok = await storage.deleteUser((req.params.id as string));
       if (!ok) return res.status(404).json({ message: "User not found" });
       res.json({ ok: true });
     } catch (error) {
@@ -706,7 +706,7 @@ export async function registerRoutes(
 
   app.get("/api/orders/:id", async (req, res) => {
     try {
-      const order = await storage.getOrderById(req.params.id);
+      const order = await storage.getOrderById((req.params.id as string));
       if (!order) return res.status(404).json({ message: "Order not found" });
       const sessionUserId = req.session.userId;
       const guestOrderIds: string[] = (req.session as any).guestOrderIds || [];
@@ -907,7 +907,7 @@ export async function registerRoutes(
       if (!parsed.success) {
         return res.status(400).json({ message: "Invalid banner data" });
       }
-      const updated = await storage.updateBanner(req.params.id, parsed.data);
+      const updated = await storage.updateBanner((req.params.id as string), parsed.data);
       if (!updated)
         return res.status(404).json({ message: "Banner not found" });
       res.json(updated);
@@ -918,7 +918,7 @@ export async function registerRoutes(
 
   app.delete("/api/admin/banners/:id", requireAdmin, async (req, res) => {
     try {
-      const deleted = await storage.deleteBanner(req.params.id);
+      const deleted = await storage.deleteBanner((req.params.id as string));
       if (!deleted)
         return res.status(404).json({ message: "Banner not found" });
       res.json({ message: "Banner deleted" });
