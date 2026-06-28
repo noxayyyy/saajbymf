@@ -5,8 +5,10 @@ import { hashPassword } from "./auth";
 
 const productImages = {
   "mahira-verdure": {
-    image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&q=80",
+    hoverImage:
+      "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=80",
     gallery: [
       "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&q=80",
       "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=80",
@@ -16,8 +18,10 @@ const productImages = {
     sku: "MV-001",
   },
   "mehr-peridot": {
-    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=80",
+    hoverImage:
+      "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=80",
     gallery: [
       "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=80",
       "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=80",
@@ -27,8 +31,10 @@ const productImages = {
     sku: "MP-002",
   },
   "mehvish-burgundy": {
-    image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=80",
+    hoverImage:
+      "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&q=80",
     gallery: [
       "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=80",
       "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&q=80",
@@ -38,8 +44,10 @@ const productImages = {
     sku: "MB-003",
   },
   "zoya-sapphire": {
-    image: "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&q=80",
+    hoverImage:
+      "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&q=80",
     gallery: [
       "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&q=80",
       "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&q=80",
@@ -49,8 +57,10 @@ const productImages = {
     sku: "ZS-004",
   },
   "maheen-emerald": {
-    image: "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d44?w=800&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d44?w=800&q=80",
+    hoverImage:
+      "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=80",
     gallery: [
       "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d44?w=800&q=80",
       "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=80",
@@ -60,8 +70,10 @@ const productImages = {
     sku: "ME-005",
   },
   "gulnar-midnight": {
-    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80",
-    hoverImage: "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d44?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80",
+    hoverImage:
+      "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d44?w=800&q=80",
     gallery: [
       "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80",
       "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d44?w=800&q=80",
@@ -73,12 +85,18 @@ const productImages = {
 };
 
 const collectionImages = {
-  embroidered: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&q=80",
-  "formal-wear": "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=80",
-  bridal: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80",
-  "casual-elegance": "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&q=80",
-  "secret-garden": "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d44?w=800&q=80",
-  sarees: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=80",
+  embroidered:
+    "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&q=80",
+  "formal-wear":
+    "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=80",
+  bridal:
+    "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80",
+  "casual-elegance":
+    "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&q=80",
+  "secret-garden":
+    "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d44?w=800&q=80",
+  sarees:
+    "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=80",
 };
 
 const navCollections = [
@@ -118,7 +136,9 @@ export async function seedDatabase() {
   const existingCollections = await db.select().from(collections);
   if (existingCollections.length > 0) {
     const existingSlugs = new Set(existingCollections.map((col) => col.slug));
-    const missingNavCollections = navCollections.filter((col) => !existingSlugs.has(col.slug));
+    const missingNavCollections = navCollections.filter(
+      (col) => !existingSlugs.has(col.slug),
+    );
     if (missingNavCollections.length > 0) {
       await db.insert(collections).values(missingNavCollections);
     }
@@ -126,7 +146,10 @@ export async function seedDatabase() {
     for (const col of existingCollections) {
       const img = collectionImages[col.slug as keyof typeof collectionImages];
       if (img && (!col.image || col.image.startsWith("/images/"))) {
-        await db.update(collections).set({ image: img }).where(sql`id = ${col.id}`);
+        await db
+          .update(collections)
+          .set({ image: img })
+          .where(sql`id = ${col.id}`);
       }
     }
 
@@ -134,13 +157,16 @@ export async function seedDatabase() {
     for (const prod of existingProducts) {
       const data = productImages[prod.slug as keyof typeof productImages];
       if (data && (!prod.image || prod.image.startsWith("/images/"))) {
-        await db.update(products).set({
-          image: data.image,
-          hoverImage: data.hoverImage,
-          gallery: data.gallery,
-          color: data.color,
-          sku: data.sku,
-        }).where(sql`id = ${prod.id}`);
+        await db
+          .update(products)
+          .set({
+            image: data.image,
+            hoverImage: data.hoverImage,
+            gallery: data.gallery,
+            color: data.color,
+            sku: data.sku,
+          })
+          .where(sql`id = ${prod.id}`);
       }
     }
     return;
@@ -194,7 +220,7 @@ export async function seedDatabase() {
       name: "Mahira Verdure",
       slug: "mahira-verdure",
       description:
-        "Discover the refined elegance of Mahira Verdure, a testament to \"Modernity in Heritage.\" This exquisite ensemble, in a captivating emerald hue, drapes flawlessly in luxurious Georgette. The shirt is artfully designed with distinctive pleats, exquisitely enhanced by delicate milky laces, creating a unique textural symphony.",
+        'Discover the refined elegance of Mahira Verdure, a testament to "Modernity in Heritage." This exquisite ensemble, in a captivating emerald hue, drapes flawlessly in luxurious Georgette. The shirt is artfully designed with distinctive pleats, exquisitely enhanced by delicate milky laces, creating a unique textural symphony.',
       price: 12000,
       currency: "PKR",
       ...productImages["mahira-verdure"],
@@ -208,7 +234,7 @@ export async function seedDatabase() {
       name: "Mehr Peridot",
       slug: "mehr-peridot",
       description:
-        "Experience the glowing allure of Mehr Peridot, a vibrant expression of \"Modernity in Heritage.\" This striking ensemble, in a fresh lime shade, blooms with masterful artistry. Elaborate Adda Work, sparkling Sitara, fine Dubka, Moti, Cut Dana, and elegant Kundan Buttons form a magnificent golden embroidery.",
+        'Experience the glowing allure of Mehr Peridot, a vibrant expression of "Modernity in Heritage." This striking ensemble, in a fresh lime shade, blooms with masterful artistry. Elaborate Adda Work, sparkling Sitara, fine Dubka, Moti, Cut Dana, and elegant Kundan Buttons form a magnificent golden embroidery.',
       price: 35500,
       currency: "PKR",
       ...productImages["mehr-peridot"],
@@ -222,7 +248,7 @@ export async function seedDatabase() {
       name: "Mehvish Burgundy",
       slug: "mehvish-burgundy",
       description:
-        "Immerse yourself in the radiant charm of Mehvish Burgundy, a masterpiece of \"Modernity in Heritage.\" This opulent ensemble, in a rich, deep hue, is a resplendent canvas for its extensive hand-done artistry. Intricate Adda Work, shimmering Sitara, delicate Moti, precise Cut Dana, traditional Dubka, and fine Resham collectively create a breathtaking golden tapestry.",
+        'Immerse yourself in the radiant charm of Mehvish Burgundy, a masterpiece of "Modernity in Heritage." This opulent ensemble, in a rich, deep hue, is a resplendent canvas for its extensive hand-done artistry. Intricate Adda Work, shimmering Sitara, delicate Moti, precise Cut Dana, traditional Dubka, and fine Resham collectively create a breathtaking golden tapestry.',
       price: 34000,
       currency: "PKR",
       ...productImages["mehvish-burgundy"],
@@ -236,7 +262,7 @@ export async function seedDatabase() {
       name: "Zoya Sapphire",
       slug: "zoya-sapphire",
       description:
-        "Embrace the profound elegance of Zoya Sapphire, a breathtaking embodiment of \"Modernity in Heritage.\" This resplendent ensemble drapes with a luxurious grace, its deep, captivating hue serving as a canvas for exquisite hand-done artistry.",
+        'Embrace the profound elegance of Zoya Sapphire, a breathtaking embodiment of "Modernity in Heritage." This resplendent ensemble drapes with a luxurious grace, its deep, captivating hue serving as a canvas for exquisite hand-done artistry.',
       price: 12500,
       currency: "PKR",
       ...productImages["zoya-sapphire"],
@@ -250,7 +276,7 @@ export async function seedDatabase() {
       name: "Maheen Emerald",
       slug: "maheen-emerald",
       description:
-        "Discover timeless allure with Maheen Emerald, a radiant expression of \"Modernity in Heritage.\" This exquisite ensemble features intricate, hand-done Zardosi and Adda Work, gracefully adorning the neckline and subtly scattered across its luminous canvas.",
+        'Discover timeless allure with Maheen Emerald, a radiant expression of "Modernity in Heritage." This exquisite ensemble features intricate, hand-done Zardosi and Adda Work, gracefully adorning the neckline and subtly scattered across its luminous canvas.',
       price: 23500,
       currency: "PKR",
       ...productImages["maheen-emerald"],
@@ -264,7 +290,7 @@ export async function seedDatabase() {
       name: "Gulnar Midnight",
       slug: "gulnar-midnight",
       description:
-        "Embrace the enchanting Gulnar Midnight, where Pakistani craftsmanship meets modern elegance. This exquisite three-piece ensemble, designed for the discerning woman, truly brings \"Modernity in Heritage\" to life.",
+        'Embrace the enchanting Gulnar Midnight, where Pakistani craftsmanship meets modern elegance. This exquisite three-piece ensemble, designed for the discerning woman, truly brings "Modernity in Heritage" to life.',
       price: 32000,
       currency: "PKR",
       ...productImages["gulnar-midnight"],
@@ -275,4 +301,18 @@ export async function seedDatabase() {
       isFeatured: true,
     },
   ]);
+}
+
+// Execute the seeder if this script is run directly from the command line
+if (process.argv[1]?.includes("seed.ts")) {
+  console.log("Starting database seeding...");
+  seedDatabase()
+    .then(() => {
+      console.log("Database seeded successfully!");
+      process.exit(0); // Safely close the database connection pool so the Vercel build exits
+    })
+    .catch((err) => {
+      console.error("Database seeding failed:", err);
+      process.exit(1);
+    });
 }
