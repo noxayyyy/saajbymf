@@ -11,13 +11,11 @@ import type { Collection } from "@shared/schema";
 
 const navLinks = [
 	{ label: "READY TO DELIVER", href: "/shop?filter=ready" },
-	{ label: "SECRET GARDEN", href: "/collections/secret-garden" },
 	{ label: "NEW ARRIVALS", href: "/shop?filter=new" },
 	{ label: "MOST LOVED", href: "/shop?filter=featured" },
 	{ label: "LUXURY PRET", href: "/collections/embroidered" },
 	{ label: "FORMALS", href: "/collections/formal-wear" },
 	{ label: "BRIDALS", href: "/collections/bridal" },
-	{ label: "SAREES", href: "/collections/sarees" },
 ];
 
 function isNavActive(location: string, search: string, href: string): boolean {
